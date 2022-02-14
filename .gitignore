@@ -1,0 +1,5 @@
+./idea
+./cmake-build-debug
+./test_data_gen/*_data
+./test_data_gen/.idea
+./test_data_gen/__pycache__

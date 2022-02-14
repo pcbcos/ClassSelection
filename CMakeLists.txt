@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 3.20)
+project(ClassSelection C CXX)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
+add_definitions(-DPDC_WIDE -DPDC_FORCE_UTF8 -DCHTYPE_32)
+
+include_directories(include)
+link_directories(lib)
+
+add_library(core STATIC DataBase.cpp menus.cpp LinkList.cpp)
+
+add_executable(ClassSelection main.cpp)
+add_executable(Test test.cpp)
+target_link_libraries(ClassSelection pdcurses core)
+target_link_libraries(Test pdcurses core)
