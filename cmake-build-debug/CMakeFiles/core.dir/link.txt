@@ -1,2 +1,0 @@
-C:\PROGRA~1\winlibs\mingw64\bin\llvm-ar.exe qc libcore.a CMakeFiles/core.dir/DataBase.cpp.obj CMakeFiles/core.dir/menus.cpp.obj CMakeFiles/core.dir/LinkList.cpp.obj
-C:\PROGRA~1\winlibs\mingw64\bin\LLVM-R~1.EXE libcore.a

@@ -1,3 +1,0 @@
-"C:\Program Files\JetBrains\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\ClassSelection.dir/objects.a
-C:\PROGRA~1\winlibs\mingw64\bin\llvm-ar.exe qc CMakeFiles\ClassSelection.dir/objects.a @CMakeFiles\ClassSelection.dir\objects1.rsp
-C:\PROGRA~1\winlibs\mingw64\bin\CLANG_~1.EXE -g -Wl,--whole-archive CMakeFiles\ClassSelection.dir/objects.a -Wl,--no-whole-archive -o ClassSelection.exe -Wl,--out-implib,libClassSelection.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\ClassSelection.dir\linklibs.rsp

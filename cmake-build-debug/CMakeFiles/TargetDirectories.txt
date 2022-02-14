@@ -1,5 +1,0 @@
-P:/ClassSelection/cmake-build-debug/CMakeFiles/core.dir
-P:/ClassSelection/cmake-build-debug/CMakeFiles/ClassSelection.dir
-P:/ClassSelection/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-P:/ClassSelection/cmake-build-debug/CMakeFiles/Test.dir
-P:/ClassSelection/cmake-build-debug/CMakeFiles/edit_cache.dir
