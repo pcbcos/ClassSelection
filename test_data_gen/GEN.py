@@ -23,7 +23,7 @@ class MyProvider(BaseProvider):
         return {"ID": ID, "name": name, "sex": sex, "age": age, "credits": credits}
 
     def class_(self):
-        ID = random.randint(1, 128)
+        ID = random.randint(1, 512)
         name = "测试课程_" + str(ID)
         type_ = random.randint(0, 1)
         credits_ = random.randint(1, 10) * 0.5

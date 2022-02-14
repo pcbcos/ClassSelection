@@ -4,7 +4,7 @@ from GEN import *
 from ctypes import *
 
 student_num = 2000
-class_num = 5
+class_num = 200
 teacher_num = 5
 resource_num = 5
 
@@ -26,9 +26,9 @@ class teacher_t(Structure):
 
 class class_t(Structure):
     _fields_ = [("ID", c_uint32),
-                ("name", c_uint64),
-                ("type", c_uint8),
-                ("credits", c_float),
+                ("name", c_char*64),
+                ("type_", c_uint8),
+                ("credits_", c_float),
                 ("max_stu", c_uint16),
                 ("now_stu", c_uint16),
                 ("class_resource_link_head", c_void_p),
@@ -75,6 +75,19 @@ def main():
         temp.credits=students[i]["credits"]
         temp.student_class_link_head=c_void_p(0)
         f_s.write(temp)
+
+    for i in range(class_num):
+        temp=class_t()
+        temp.ID=classes[i]["ID"]
+        temp.name=bytes(classes[i]["name"],encoding="UTF-8")
+        temp.type_=classes[i]["type"]
+        temp.credits_=classes[i]["credits"]
+        temp.max_stu=classes[i]["max_stu"]
+        temp.now_stu=classes[i]["now_stu"]
+        temp.class_resource_link_head=c_void_p(0)
+        temp.class_teacher_link_head=c_void_p(0)
+        temp.class_student_link_head=c_void_p(0)
+        f_c.write(temp)
 
     f_s.close()
     f_c.close()
