@@ -239,6 +239,30 @@ void dump_teacher_data_gui(char mode) {
 
 
 //从磁盘中读取学生信息,更新index-ID索引
+//void read_student_data() {
+//    FILE *fp = fopen("student_data", "rb");
+//    student_t temp = {0};
+//    fread(&student_num, sizeof(student_num), 1, fp);//读取数量
+//    for (int i = 0; i < student_num; i++) {
+//        fread(&temp, sizeof(temp), 1, fp);
+//        temp.student_class_link_head = NULL; //设为空指针
+//        uint32_t hID = temp.ID;
+//        uint8_t hash_count = 0;
+//        do {
+//            hID = hashID(hID, MAX_STUDENT_NUM);
+//            hash_count++;
+//        } while (index_of_student_hashID[hID] != 0 && hash_count < MAX_HASH_TIME);
+//        if(index_of_student_hashID[hID] ==0){
+//            index_of_student_hashID[hID]=i+1;
+//            student_list[i + 1] = temp;
+//        } else{
+//            char waring_text[64]={0};
+//            sprintf(waring_text,"i=%d,ID=%d hash冲突%d次,加入失败",i,MAX_HASH_TIME,temp.ID);
+//            show_warning_win(waring_text);
+//        }
+//    }
+//    fclose(fp);
+//}
 void read_student_data() {
     FILE *fp = fopen("student_data", "rb");
     student_t temp = {0};
@@ -246,30 +270,20 @@ void read_student_data() {
     for (int i = 0; i < student_num; i++) {
         fread(&temp, sizeof(temp), 1, fp);
         temp.student_class_link_head = NULL; //设为空指针
-        //student_list[i + 1] = temp;
-//        uint32_t hID= hashID(temp.ID,MAX_STUDENT_NUM);
         uint32_t hID = temp.ID;
         uint8_t hash_count = 0;
         do {
             hID = hashID(hID, MAX_STUDENT_NUM);
             hash_count++;
-        } while (index_of_student_hashID[hID] != 0 && hash_count < MAX_HASH_TIME);
-        if(index_of_student_hashID[hID] ==0){
-            index_of_student_hashID[hID]=i+1;
-            student_list[i + 1] = temp;
-        } else{
-            char waring_text[64]={0};
-            sprintf(waring_text,"i=%d,ID=%d hash冲突%d次,加入失败",i,MAX_HASH_TIME,temp.ID);
+        } while (student_list[hID].ID != 0 && hash_count < MAX_HASH_TIME);
+        if (student_list[hID].ID == 0) {
+            student_list[hID] = temp;
+        } else {
+            char waring_text[64] = {0};
+            sprintf(waring_text, "i=%d,ID=%d hash冲突%d次,加入失败", i, MAX_HASH_TIME, temp.ID);
             show_warning_win(waring_text);
         }
-//        if (index_of_student_hashID[hID] != 0) {
-//            index_of_student_hashID[(temp.ID ^ 31415927) % MAX_STUDENT_NUM] = i + 1;
-//        } else {
-//
-//        }
-
     }
-
     fclose(fp);
 }
 

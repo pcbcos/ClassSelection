@@ -150,15 +150,28 @@ uint32_t get_min_available_ID(const uint32_t *index_list, uint32_t max_num);//�
 
 
 template<typename T, std::size_t N>
-uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N], const uint32_t *index_list) {
+//uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N], const uint32_t *index_list) {
+//    uint32_t hID = ID;
+//    uint8_t hash_count = 0;
+//    do {
+//        hID = hashID(hID, N);//取哈希作为索引
+//        hash_count++;
+//    } while (hash_count < MAX_HASH_TIME && entity_list[index_list[hID]].ID != ID);
+//    if (entity_list[index_list[hID]].ID == ID) {
+//        return index_list[hID];
+//    } else {
+//        return 0;
+//    }
+//}
+uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N]) {
     uint32_t hID = ID;
     uint8_t hash_count = 0;
     do {
         hID = hashID(hID, N);//取哈希作为索引
         hash_count++;
-    } while (hash_count < MAX_HASH_TIME && entity_list[index_list[hID]].ID != ID);
-    if (entity_list[index_list[hID]].ID == ID) {
-        return index_list[hID];
+    } while (hash_count < MAX_HASH_TIME && entity_list[hID].ID != ID);
+    if (entity_list[hID].ID == ID) {
+        return hID;
     } else {
         return 0;
     }
