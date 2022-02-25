@@ -97,6 +97,7 @@ def main():
         temp.first_week = resources[i]["first_week"]
         temp.last_week = resources[i]["last_week"]
         temp.odd_even = resources[i]["odd_even_"]
+        f_r.write(temp)
 
     f_s.close()
     f_c.close()

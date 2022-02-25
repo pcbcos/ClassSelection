@@ -181,6 +181,7 @@ int main() {
 //        printf("name=%s\tID=%d\n", s.name, s.ID);
 //    }
     for (auto &r: resource_list) {
+        if(r.ID)
         printf("name=%s\tID=%d\n", r.name, r.ID);
     }
 
