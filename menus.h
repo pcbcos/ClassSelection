@@ -7,7 +7,7 @@
 
 #include "curses.h"
 #include "panel.h"
-#include "windows.h"
+
 #define main_menu_size_x 30
 #define main_menu_size_y 10
 extern int max_x,max_y;

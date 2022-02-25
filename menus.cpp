@@ -281,6 +281,6 @@ void show_warning_win(const char *waring_text) {
 //    wrefresh(warning_win);
 //    refresh();
 //    while (!wgetch(warning_win));
-    MessageBox(NULL, waring_text, "警告", MB_OK);
+    //MessageBox(NULL, waring_text, "警告", MB_OK);
     return;
 }

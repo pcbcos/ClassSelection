@@ -11,5 +11,5 @@ add_library(core STATIC DataBase.cpp menus.cpp LinkList.cpp)
 
 add_executable(ClassSelection main.cpp)
 add_executable(Test test.cpp)
-target_link_libraries(ClassSelection pdcurses core)
-target_link_libraries(Test pdcurses core)
+target_link_libraries(ClassSelection newt core)
+target_link_libraries(Test  newt core)
