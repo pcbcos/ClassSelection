@@ -239,7 +239,7 @@ int main(int argc, char *args[]) {
         newtFormDestroy(fm);
         switch (*u) {
             case 1:
-                rootwin_show();
+                student_mode();
                 break;
             case 2:
                 student_mode();
