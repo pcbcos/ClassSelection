@@ -72,7 +72,7 @@ resource_t resource_zero = {
         .ID=0,
         .day=0,
         .rank=0,
-        .location={'0'},
+        .name={'0'},
         .first_week=0,
         .last_week=0,
         .odd_even=ALL
@@ -90,7 +90,7 @@ class_t class_loader(char *raw_text) {
     class_t Aclass = {0};
     class_t *p = &Aclass;
     char text_temp[512] = {0};
-    sscanf(raw_text, "ID:%d name:%s type:%d credits:%d max_stu:%d now_stu:%d time&&location:%s",
+    sscanf(raw_text, "ID:%d name:%s type:%d credits:%d max_stu:%d now_stu:%d time&&name:%s",
            &(Aclass.ID),
            Aclass.name, &(Aclass.type), &(Aclass.credits), &(Aclass.max_stu), &(Aclass.now_stu), text_temp);
     char *p1 = text_temp;
@@ -152,9 +152,9 @@ resource_t class_time_analysis(char *text_p1, char *text_p2) {
     }
     char *p_next = strchr(p1, '|');
     if (p_next && p_next < p2) {
-        strncpy(info.location, p1, p_next - p1);
+        strncpy(info.name, p1, p_next - p1);
     } else {
-        strncpy(info.location, p1, p2 - p1);
+        strncpy(info.name, p1, p2 - p1);
     }
     //TODO:特殊时间
     return info;
@@ -175,7 +175,7 @@ void printclassinfo(class_t c) {
     int i = 0;
     while (t = (resource_t *) (list_at(info, i))) {
         i++;
-        printf("周%s第%d节 %s\n", week[t->day], t->rank, t->location);
+        printf("周%s第%d节 %s\n", week[t->day], t->rank, t->name);
     }
 }
 

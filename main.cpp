@@ -126,7 +126,7 @@ int main() {
     read_class_data();
     read_resource_data();
     read_teacher_data();
-#define TEST_MENU 1
+#define TEST_MENU 0
 #if TEST_MENU
     newtInit();
     login();
@@ -163,17 +163,27 @@ int main() {
     } while (1);
 #else
 
-    for (auto &s: student_list) {
-        if (s.ID) {
-            printf("NAME=%s,ID=%d\n", s.name, s.ID);
-        }
+//    for (auto &s: student_list) {
+//        if (s.ID) {
+//            printf("NAME=%s,ID=%d\n", s.name, s.ID);
+//        }
+//    }
+//    for (uint32_t index = 1; index < MAX_STUDENT_NUM; index++) {
+//        if (strcmp("翁湛阳", student_list[index].name) == 0) {
+//            printf("index=%d",index);
+//            break;
+//        }
+//    }
+//    uint32_t* r=widesearch(0, "测试", resource_list);
+//
+//    for (int i = 0; i < 32; i++) {
+//        resource_t s = resource_list[r[i]];
+//        printf("name=%s\tID=%d\n", s.name, s.ID);
+//    }
+    for (auto &r: resource_list) {
+        printf("name=%s\tID=%d\n", r.name, r.ID);
     }
-    for (uint32_t index = 1; index < MAX_STUDENT_NUM; index++) {
-        if (strcmp("翁湛阳", student_list[index].name) == 0) {
-            printf("index=%d",index);
-            break;
-        }
-    }
+
 
 #endif
     return 0;
@@ -253,6 +263,7 @@ void admin_modify() {
     rb[2] = newtRadiobutton(30, 3, "教师", 0, rb[1]);
     newtFormAddComponents(form, label1, label2, entry, rb[0], rb[1], rb[2], button, NULL);
     newtPushHelpLine("< 空格健 > 选择");
+
     newtRunForm(form);
     uint8_t type = 0;
     for (int i = 0; i < 3; i++) {
@@ -276,38 +287,43 @@ void admin_modify() {
         newtDrawRootText(0, 0, "你查询的字段是:");
         newtDrawRootText(16, 0, entryValue);
         uint32_t id = atoi(entryValue);
-        uint32_t result[32]{};
+        uint32_t *result;
+
         if (id) {
             switch (type) {
                 case 0:
-                    widesearch(id, NULL, student_list, result);
+                    result = widesearch(id, NULL, student_list);
                     break;
                 case 1:
-                    widesearch(id, NULL, class_list, result);
+                    result = widesearch(id, NULL, class_list);
                     break;
                 case 2:
-                    widesearch(id, NULL, teacher_list, result);
+                    result = widesearch(id, NULL, teacher_list);
                     break;
             }
         } else {
             switch (type) {
                 case 0:
-                    widesearch(0, entryValue, student_list, result);
+
+                    result = widesearch(0, entryValue, student_list);
                     break;
                 case 1:
-                    widesearch(0, entryValue, class_list, result);
+                    result = widesearch(0, entryValue, class_list);
                     break;
                 case 2:
-                    widesearch(0, entryValue, teacher_list, result);
+                    result = widesearch(0, entryValue, teacher_list);
                     break;
             }
         }
+
         char text[32] = {0};
         sprintf(text, "index=%d", result[0]);
         show_warning_win(text);
 
-    } else
+    } else {
         newtDrawRootText(0, 0, "无输入 !");
+    }
+
 
     newtRefresh();
     newtFormDestroy(form);

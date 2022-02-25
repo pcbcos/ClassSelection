@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(ClassSelection C CXX)
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 14)
-add_definitions(-DPDC_WIDE -DPDC_FORCE_UTF8 -DCHTYPE_32)
+set(CMAKE_CXX_STANDARD 23)
 
 include_directories(include)
 link_directories(lib)

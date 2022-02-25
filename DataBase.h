@@ -93,7 +93,7 @@ struct resource_t {
     uint32_t ID{};
     uint8_t day{}; //0为周日
     uint8_t rank{}; //一天中第几节,从1开始数
-    char location[64]{};//教室位置
+    char name[64]{};//教室位置
     uint8_t first_week{1};//从第几周开始 默认从第一周开始
     uint8_t last_week{20};//默认到第20周结束
     Biweekly odd_even{ALL};//单双周信息，默认单双周都上
@@ -179,19 +179,28 @@ uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N]) {
 }
 
 template<typename T, std::size_t N>
-void widesearch(uint32_t ID, const char *name, const T(&entity_list)[N], uint32_t *result) {
+uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N]) {
     uint32_t i = 0;
+    uint32_t m = 32;
+    auto *result = (uint32_t *) malloc(32 * 4);
+    memset(result, 0, 32);
     if (ID) {
         uint32_t index = get_index_by_ID(ID, entity_list);
         result[i++] = index;
     } else if (name) {
         for (int index = 1; index < N; index++) {
             T e = entity_list[index];
-            if (strcmp(e.name, name)) {
+            if (strstr(e.name, name)) {
                 result[i++] = index;
+                if (i == m) {
+                    result = (uint32_t *) realloc(result, (m + 32) * 4);
+                    memset(result + m, 0, 32);
+                    m += 32;
+                }
             }
         }
     }
+    return result;
 }
 
 #endif //CLASSSELECTION_DATABASE_H
