@@ -265,7 +265,7 @@ void dump_teacher_data_gui(char mode) {
 //}
 void read_student_data() {
     FILE *fp = fopen("../test_data_gen/student_data", "rb");
-    student_t temp = {0};
+    student_t temp{0};
     fread(&student_num, sizeof(student_num), 1, fp);//读取数量
     for (int i = 0; i < student_num; i++) {
         fread(&temp, sizeof(temp), 1, fp);
@@ -290,7 +290,7 @@ void read_student_data() {
 //从磁盘中读取教师信息,更新index-ID索引
 void read_teacher_data() {
     FILE *fp = fopen("../test_data_gen/teacher_data", "rb");
-    teacher_t temp = {0};
+    teacher_t temp{0};
     fread(&teacher_num, sizeof(teacher_num), 1, fp);//读取数量
     for (int i = 0; i < teacher_num; i++) {
         fread(&temp, sizeof(temp), 1, fp);
@@ -317,7 +317,7 @@ void read_teacher_data() {
 void read_class_data() {
 
     FILE *fp = fopen("../test_data_gen/class_data", "rb");
-    class_t temp = {0};
+    class_t temp{0};
     fread(&class_num, sizeof(class_num), 1, fp);//读取数量
     for (int i = 0; i < class_num; i++) {
         fread(&temp, sizeof(temp), 1, fp);
@@ -346,7 +346,7 @@ void read_class_data() {
 //从磁盘中读取课程表资源信息,更新index-ID索引
 void read_resource_data() {
     FILE *fp = fopen("../test_data_gen/resource_data", "rb");
-    resource_t temp = {0};
+    resource_t temp{0};
     fread(&resource_num, sizeof(resource_num), 1, fp);//读取数量
     for (int i = 0; i < resource_num; i++) {
         fread(&temp, sizeof(temp), 1, fp);
