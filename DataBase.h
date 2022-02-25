@@ -62,7 +62,7 @@ enum Biweekly {
 struct teacher_t {
     uint32_t ID{0};
     char name[32]{0};
-    TeacherClassLink teacher_class_link_head=NULL;
+    TeacherClassLink teacher_class_link_head = NULL;
 };
 
 struct student_t {
@@ -135,7 +135,7 @@ void dump_student_data(char mode);//将学生信息存入磁盘
 void dump_teacher_data(char mode); //将教师的信息存入磁盘
 
 void DataBaseInit();//数据库初始化
-void show_warning_win(char* text);//显示错误信息
+void show_warning_win(char *text);//显示错误信息
 void read_student_data();
 
 void read_teacher_data();
@@ -143,6 +143,7 @@ void read_teacher_data();
 void read_class_data();
 
 void read_resource_data();
+
 
 uint32_t hashID(uint32_t ID, uint64_t max);
 
@@ -174,6 +175,22 @@ uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N]) {
         return hID;
     } else {
         return 0;
+    }
+}
+
+template<typename T, std::size_t N>
+void widesearch(uint32_t ID, const char *name, const T(&entity_list)[N], uint32_t *result) {
+    uint32_t i = 0;
+    if (ID) {
+        uint32_t index = get_index_by_ID(ID, entity_list);
+        result[i++] = index;
+    } else if (name) {
+        for (int index = 1; index < N; index++) {
+            T e = entity_list[index];
+            if (strcmp(e.name, name)) {
+                result[i++] = index;
+            }
+        }
     }
 }
 

@@ -3,40 +3,44 @@
 uint32_t ID;
 
 void student_mode() {
-    int p = 1, q = 2, r = 3, s = 4, *u;
-    newtComponent list, form;
-    newtCenteredWindow(50, 10, "学生模式-请选择您的操作");
-    list = newtListbox(18, 3, 5, NEWT_FLAG_RETURNEXIT);
-    newtListboxAppendEntry(list, "查询课程信息、成绩", &p);
-    newtListboxAppendEntry(list, "选课", &q);
-    newtListboxAppendEntry(list, "退课", &r);
-    newtListboxAppendEntry(list, "退出", &s);
-    newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
-    form = newtForm(NULL, NULL, 0);
-    newtFormAddComponent(form, list);
-    newtRunForm(form);
-    u = (int *) newtListboxGetCurrent(list);
-    newtPopWindow();
-    newtFormDestroy(form);
-    switch (*u) {
-        case 1:
-            student_querry();
-            break;
-        case 2:
-            student_addclass();
-            break;
-        case 3:
-            student_delclass();
-            break;
-        case 4:
-            return;
-    }
+    do {
+        int p = 1, q = 2, r = 3, s = 4, *u;
+        newtCls();
+        newtComponent list, form;
+        newtCenteredWindow(50, 10, "学生模式-请选择您的操作");
+        list = newtListbox(18, 3, 5, NEWT_FLAG_RETURNEXIT);
+        newtListboxAppendEntry(list, "查询课程信息、成绩", &p);
+        newtListboxAppendEntry(list, "选课", &q);
+        newtListboxAppendEntry(list, "退课", &r);
+        newtListboxAppendEntry(list, "退出", &s);
+        newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
+        form = newtForm(NULL, NULL, 0);
+        newtFormAddComponent(form, list);
+        newtRunForm(form);
+        u = (int *) newtListboxGetCurrent(list);
+        newtPopWindow();
+        newtFormDestroy(form);
+        switch (*u) {
+            case 1:
+                student_querry();
+                break;
+            case 2:
+                student_addclass();
+                break;
+            case 3:
+                student_delclass();
+                break;
+            case 4:
+                return;
+        }
+    } while (1);
 }
 
 
 void admin_querry() {
     newtComponent form, label1, label2, entry, button, rb[3];
     char *entryValue;
+
     newtCls();
     newtCenteredWindow(50, 10, "管理员模式-查询记录");
     /*left,top 是相对于中心窗口而言 */
@@ -76,41 +80,44 @@ void admin_querry() {
 
 void admin_mode() {
     int p = 1, q = 2, r = 3, s = 4, a = 5, b = 6, *u;
-    newtComponent list, form;
-    newtCls();
-    newtRefresh();
-    newtDrawRootText(100, 0, "管理员模式");
+    do {
+        newtComponent list, form;
 
-    newtCenteredWindow(50, 10, "管理员模式-请选择您的操作");
-    list = newtListbox(18, 3, 5, NEWT_FLAG_RETURNEXIT);
-    newtListboxAppendEntry(list, "浏览记录", &p); //1
-    newtListboxAppendEntry(list, "查询记录", &q); //2
-    newtListboxAppendEntry(list, "修改记录", &r);//3
-    newtListboxAppendEntry(list, "添加课程", &s);//4
-    newtListboxAppendEntry(list, "退出", &a);
-    newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
-    form = newtForm(NULL, NULL, 0);
-    newtFormAddComponent(form, list);
-    newtRunForm(form);
-    u = (int *) newtListboxGetCurrent(list);
-    newtPopWindow();
-    newtFormDestroy(form);
-    switch (*u) {
-        case 1:
-            admin_lookover();
-            break;
-        case 2:
-            admin_querry();
-            break;
-        case 3:
-            admin_modify();
-            break;
-        case 4:
-            admin_addclass();
-            break;
-        case 5:
-            return;
-    }
+        newtCls();
+        newtRefresh();
+        newtDrawRootText(100, 0, "管理员模式");
+
+        newtCenteredWindow(50, 10, "管理员模式-请选择您的操作");
+        list = newtListbox(18, 3, 5, NEWT_FLAG_RETURNEXIT);
+        newtListboxAppendEntry(list, "浏览记录", &p); //1
+        newtListboxAppendEntry(list, "查询记录", &q); //2
+        newtListboxAppendEntry(list, "修改记录", &r);//3
+        newtListboxAppendEntry(list, "添加课程", &s);//4
+        newtListboxAppendEntry(list, "退出", &a);
+        newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
+        form = newtForm(NULL, NULL, 0);
+        newtFormAddComponent(form, list);
+        newtRunForm(form);
+        u = (int *) newtListboxGetCurrent(list);
+        newtPopWindow();
+        newtFormDestroy(form);
+        switch (*u) {
+            case 1:
+                admin_lookover();
+                break;
+            case 2:
+                admin_querry();
+                break;
+            case 3:
+                admin_modify();
+                break;
+            case 4:
+                admin_addclass();
+                break;
+            case 5:
+                return;
+        }
+    } while (1);
 }
 
 
@@ -119,7 +126,7 @@ int main() {
     read_class_data();
     read_resource_data();
     read_teacher_data();
-#define TEST_MENU 0
+#define TEST_MENU 1
 #if TEST_MENU
     newtInit();
     login();
@@ -227,7 +234,84 @@ void student_delclass() { ; }
 
 void admin_lookover() { ; }
 
-void admin_modify() { ; }
+void admin_modify() {
+    newtComponent form, label1, label2, entry, button, rb[3];
+    char *entryValue;
+
+    newtCls();
+    newtCenteredWindow(50, 10, "管理员模式-修改记录");
+    /*left,top 是相对于中心窗口而言 */
+    label1 = newtLabel(10, 1, "请输入查询信息:");
+    entry = newtEntry(25, 1, "小明", 20, (const char **) &entryValue, NEWT_FLAG_SCROLL);
+    newtEntrySet(entry, "\0", 0);
+    button = newtButton(22, 5, "确认");
+    form = newtForm(NULL, NULL, 0);
+
+    label2 = newtLabel(5, 3, "查询类别:");
+    rb[0] = newtRadiobutton(10, 3, "学生", 1, NULL);
+    rb[1] = newtRadiobutton(20, 3, "课程", 0, rb[0]);
+    rb[2] = newtRadiobutton(30, 3, "教师", 0, rb[1]);
+    newtFormAddComponents(form, label1, label2, entry, rb[0], rb[1], rb[2], button, NULL);
+    newtPushHelpLine("< 空格健 > 选择");
+    newtRunForm(form);
+    uint8_t type = 0;
+    for (int i = 0; i < 3; i++) {
+        if (newtRadioGetCurrent(rb[0]) == rb[i]) {
+            newtDrawRootText(0, 2, "您查询的类别是:");
+            if (i == 0) {
+                newtDrawRootText(16, 2, "学生");
+                type = 0;
+            }
+            if (i == 1) {
+                newtDrawRootText(16, 2, "课程");
+                type = 1;
+            }
+            if (i == 2) {
+                newtDrawRootText(16, 2, "教师");
+                type = 2;
+            }
+        }
+    }
+    if (*entryValue != '\0') {
+        newtDrawRootText(0, 0, "你查询的字段是:");
+        newtDrawRootText(16, 0, entryValue);
+        uint32_t id = atoi(entryValue);
+        uint32_t result[32]{};
+        if (id) {
+            switch (type) {
+                case 0:
+                    widesearch(id, NULL, student_list, result);
+                    break;
+                case 1:
+                    widesearch(id, NULL, class_list, result);
+                    break;
+                case 2:
+                    widesearch(id, NULL, teacher_list, result);
+                    break;
+            }
+        } else {
+            switch (type) {
+                case 0:
+                    widesearch(0, entryValue, student_list, result);
+                    break;
+                case 1:
+                    widesearch(0, entryValue, class_list, result);
+                    break;
+                case 2:
+                    widesearch(0, entryValue, teacher_list, result);
+                    break;
+            }
+        }
+        char text[32] = {0};
+        sprintf(text, "index=%d", result[0]);
+        show_warning_win(text);
+
+    } else
+        newtDrawRootText(0, 0, "无输入 !");
+
+    newtRefresh();
+    newtFormDestroy(form);
+}
 
 void admin_addclass() { ; }
 
