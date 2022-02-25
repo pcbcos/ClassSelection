@@ -7,14 +7,14 @@
 
 #include "DataBase.h"
 
-class_t class_list[MAX_CLASS_NUM] = {0};
-student_t student_list[MAX_STUDENT_NUM] = {0};
-teacher_t teacher_list[MAX_TEACHER_NUM] = {0};
-resource_t resource_list[MAX_RESOURCE_NUM] = {0};
+class_t class_list[MAX_CLASS_NUM];
+student_t student_list[MAX_STUDENT_NUM];
+teacher_t teacher_list[MAX_TEACHER_NUM];
+resource_t resource_list[MAX_RESOURCE_NUM];
 
-class_teacher_t relation_class_teacher_list[MAX_REL_CLASS_TEACHER_NUM] = {0};
-class_student_t relation_class_student_list[MAX_REL_CLASS_STUDENT_NUM] = {0};
-class_resource_t relation_class_resource_list[MAX_REL_CLASS_RESOURCE_NUM] = {0};
+class_teacher_t relation_class_teacher_list[MAX_REL_CLASS_TEACHER_NUM];
+class_student_t relation_class_student_list[MAX_REL_CLASS_STUDENT_NUM];
+class_resource_t relation_class_resource_list[MAX_REL_CLASS_RESOURCE_NUM];
 
 /***各种实体、关系的数量,存在文件的开头位置***/
 uint32_t class_num = 0;
