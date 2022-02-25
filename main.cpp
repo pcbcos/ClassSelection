@@ -1,5 +1,7 @@
 #include "main.h"
 
+uint32_t ID;
+
 void student_mode() {
     int p = 1, q = 2, r = 3, s = 4, *u;
     newtComponent list, form;
@@ -109,30 +111,16 @@ void admin_mode() {
         case 5:
             return;
     }
-
-
 }
 
 
 int main() {
-//    if (argc != 3) {
-//        printf("请输入正确的账号密码!\n");
-//        getchar();
-//        return 1;
-//    } else {
-//        if (strcmp(args[1], "wengzy1920") == 0 && strcmp(args[2], "kalium1910") == 0) { ;
-//        } else {
-//            printf("账号密码无效!\n");
-//            getchar();
-//            return 2;
-//        }
-//    }
+#define TEST_MENU 0
+#if TEST_MENU
     newtInit();
     login();
-
     newtComponent list, fm;
     int p = 1, q = 2, r = 3, s = 4, t = 5, *u;
-
     do {
         newtCls();
         newtRefresh();
@@ -158,10 +146,24 @@ int main() {
                 break;
             case 4:
                 newtFinished();
+                printf("ID=%d\n",ID);
                 exit(0);
         }
     } while (1);
+#else
+    read_student_data();
+//    for (auto &s: student_list) {
+//        if (s.ID) {
+//            printf("NAME=%s,ID=%d\n", s.name, s.ID);
+//        }
+//    }
+    uint32_t index = get_index_by_ID(19201022, student_list);
+    if(index){
+        student_t s=student_list[index];
+        printf("name=%s,ID=%d",s.name,s.ID);
+    }
 
+#endif
     return 0;
 }
 
@@ -173,30 +175,33 @@ void login() {
     newtComponent form, label1, label2, entry1, entry2, button;
     char *id = (char *) malloc(16);
     char *passwd = (char *) malloc(16);
-    memset(id,0,16);
-    memset(passwd,0,16);
+    memset(id, 0, 16);
+    memset(passwd, 0, 16);
     button = newtButton(45, 6, "登录");
     label1 = newtLabel(35, 3, "ID");
     label2 = newtLabel(35, 4, "密码");
-    entry1 = newtEntry(40, 3, "wengzy1920", 20, (const char **) &id, NEWT_FLAG_SCROLL);
+    entry1 = newtEntry(40, 3, "19201022", 20, (const char **) &id, NEWT_FLAG_SCROLL);
     entry2 = newtEntry(40, 4, "kalium1910", 20, (const char **) &passwd, NEWT_FLAG_SCROLL | NEWT_FLAG_PASSWORD);
     form = newtForm(NULL, NULL, 0);
     newtFormAddComponents(form, label1, label2, entry1, entry2, button, NULL);
     newtRunForm(form);
-    if (strcmp(id, "wengzy1920") == 0 and strcmp(passwd, "kalium1910") == 0) {
+    ID = atoi(id);
+    if (strcmp(id, "19201022") == 0 and strcmp(passwd, "kalium1910") == 0) {
         newtRefresh();
         newtFormDestroy(form);
         return;
     } else {
         newtFinished();
-        printf("%s",id);
+        printf("%s", id);
         exit(1);
     }
-
-
 }
 
-void student_querry() { ; }
+void student_querry() {
+    newtCls();
+    newtRefresh();
+    uint32_t index = get_index_by_ID(ID, student_list);
+}
 
 void student_addclass() { ; }
 

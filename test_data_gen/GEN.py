@@ -20,6 +20,10 @@ class MyProvider(BaseProvider):
 
         credits = random.randint(10, 20)
         # return [ID, name, sex, age, credits]
+        if ID=19201022:
+            name="翁湛阳"
+            sex="男"
+            credits=18
         return {"ID": ID, "name": name, "sex": sex, "age": age, "credits": credits}
 
     def class_(self):

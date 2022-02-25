@@ -26,7 +26,7 @@ uint32_t class_teacher_num = 0;
 uint32_t class_student_num = 0;
 uint32_t class_resource_num = 0;
 
-//快速索引表
+//快速索引表系
 uint32_t index_of_class_hashID[MAX_CLASS_NUM] = {0};
 uint32_t index_of_student_hashID[MAX_STUDENT_NUM] = {0};
 uint32_t index_of_teacher_hashID[MAX_TEACHER_NUM] = {0};
@@ -264,7 +264,7 @@ void dump_teacher_data_gui(char mode) {
 //    fclose(fp);
 //}
 void read_student_data() {
-    FILE *fp = fopen("student_data", "rb");
+    FILE *fp = fopen("../test_data_gen/student_data", "rb");
     student_t temp = {0};
     fread(&student_num, sizeof(student_num), 1, fp);//读取数量
     for (int i = 0; i < student_num; i++) {
@@ -289,7 +289,7 @@ void read_student_data() {
 
 //从磁盘中读取教师信息,更新index-ID索引
 void read_teacher_data() {
-    FILE *fp = fopen("teacher_data", "rb");
+    FILE *fp = fopen("../test_data_gen/teacher_data", "rb");
     teacher_t temp = {0};
     fread(&teacher_num, sizeof(teacher_num), 1, fp);//读取数量
     for (int i = 0; i < teacher_num; i++) {
@@ -316,7 +316,7 @@ void read_teacher_data() {
 //从磁盘中读取课程信息,更新index-ID索引
 void read_class_data() {
 
-    FILE *fp = fopen("class_data", "rb");
+    FILE *fp = fopen("../test_data_gen/class_data", "rb");
     class_t temp = {0};
     fread(&class_num, sizeof(class_num), 1, fp);//读取数量
     for (int i = 0; i < class_num; i++) {
@@ -345,7 +345,7 @@ void read_class_data() {
 
 //从磁盘中读取课程表资源信息,更新index-ID索引
 void read_resource_data() {
-    FILE *fp = fopen("resource_data", "rb");
+    FILE *fp = fopen("../test_data_gen/resource_data", "rb");
     resource_t temp = {0};
     fread(&resource_num, sizeof(resource_num), 1, fp);//读取数量
     for (int i = 0; i < resource_num; i++) {
@@ -414,5 +414,9 @@ uint32_t hashID(uint32_t ID, uint64_t max) {
     }
 }
 
+void show_warning_win(char *text) {
+
+    newtWinMessage("警告", "确定", text);
+}
 
 #pragma clang diagnostic pop

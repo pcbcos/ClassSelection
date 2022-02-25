@@ -11,7 +11,7 @@
 #include <cstdio>
 #include "curses.h"
 #include "cstring"
-#include "menus.h"
+#include "newt.h"
 
 #define MAX_CLASS_NUM 500
 #define MAX_STUDENT_NUM 10000
@@ -135,6 +135,7 @@ void dump_student_data(char mode);//将学生信息存入磁盘
 void dump_teacher_data(char mode); //将教师的信息存入磁盘
 
 void DataBaseInit();//数据库初始化
+void show_warning_win(char* text);//显示错误信息
 void read_student_data();
 
 void read_teacher_data();

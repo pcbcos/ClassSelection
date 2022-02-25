@@ -7,7 +7,7 @@ add_definitions(-DPDC_WIDE -DPDC_FORCE_UTF8 -DCHTYPE_32)
 include_directories(include)
 link_directories(lib)
 
-add_library(core STATIC DataBase.cpp menus.cpp LinkList.cpp)
+add_library(core STATIC DataBase.cpp LinkList.cpp)
 
 add_executable(ClassSelection main.cpp)
 add_executable(Test test.cpp)
