@@ -115,7 +115,11 @@ void admin_mode() {
 
 
 int main() {
-#define TEST_MENU 0
+    read_student_data();
+    read_class_data();
+    read_resource_data();
+    read_teacher_data();
+#define TEST_MENU 1
 #if TEST_MENU
     newtInit();
     login();
@@ -146,21 +150,22 @@ int main() {
                 break;
             case 4:
                 newtFinished();
-                printf("ID=%d\n",ID);
+                printf("ID=%d\n", ID);
                 exit(0);
         }
     } while (1);
 #else
-    read_student_data();
-//    for (auto &s: student_list) {
-//        if (s.ID) {
-//            printf("NAME=%s,ID=%d\n", s.name, s.ID);
-//        }
-//    }
-    uint32_t index = get_index_by_ID(19201022, student_list);
-    if(index){
-        student_t s=student_list[index];
-        printf("name=%s,ID=%d",s.name,s.ID);
+
+    for (auto &s: student_list) {
+        if (s.ID) {
+            printf("NAME=%s,ID=%d\n", s.name, s.ID);
+        }
+    }
+    for (uint32_t index = 1; index < MAX_STUDENT_NUM; index++) {
+        if (strcmp("翁湛阳", student_list[index].name) == 0) {
+            printf("index=%d",index);
+            break;
+        }
     }
 
 #endif
@@ -201,6 +206,18 @@ void student_querry() {
     newtCls();
     newtRefresh();
     uint32_t index = get_index_by_ID(ID, student_list);
+    student_t s = student_list[index];
+    char text[128] = {0};
+    wchar_t sex = s.sex ? L'女' : L'男';
+    sprintf(text, "姓名:%s\n学号:%d\n性别:%lc\n已获得学分:%d\n", s.name, s.ID, sex, s.credits);
+    newtComponent form, t, button;
+    t = newtTextboxReflowed(1, 1, text, 30, 5, 5, 0);
+    newtCenteredWindow(100, 20, "学生信息");
+    button = newtButton(45, 16, "返回");
+    form = newtForm(NULL, NULL, 0);
+    newtFormAddComponents(form, t, button, NULL);
+    newtRunForm(form);
+    newtFormDestroy(form);
 }
 
 void student_addclass() { ; }

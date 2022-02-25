@@ -415,7 +415,6 @@ uint32_t hashID(uint32_t ID, uint64_t max) {
 }
 
 void show_warning_win(char *text) {
-
     newtWinMessage("警告", "确定", text);
 }
 
