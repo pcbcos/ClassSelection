@@ -48,7 +48,7 @@ void admin_querry() {
     rb[0] = newtRadiobutton(10, 3, "学生", 1, NULL);
     rb[1] = newtRadiobutton(20, 3, "课程", 0, rb[0]);
     rb[2] = newtRadiobutton(30, 3, "教师", 0, rb[1]);
-    newtFormAddComponents(form, label1, label2, entry, rb[0], rb[1], rb[2], button,NULL);
+    newtFormAddComponents(form, label1, label2, entry, rb[0], rb[1], rb[2], button, NULL);
     newtPushHelpLine("< 空格健 > 选择");
     newtRunForm(form);
     for (int i = 0; i < 3; i++) {
@@ -61,7 +61,6 @@ void admin_querry() {
     }
 
 
-
     if (*entryValue != '\0') {
         newtDrawRootText(0, 0, "你查询的字段是:");
         newtDrawRootText(16, 0, entryValue);
@@ -71,7 +70,6 @@ void admin_querry() {
     newtFormDestroy(form);
     sleep(10);
 }
-
 
 
 void admin_mode() {
@@ -117,21 +115,23 @@ void admin_mode() {
 
 
 int main(int argc, char *args[]) {
-    if (argc != 3) {
-        printf("请输入正确的账号密码!\n");
-        getchar();
-        return 1;
-    } else {
-        if (strcmp(args[1], "wengzy1920") == 0 && strcmp(args[2], "kalium1910") == 0) { ;
-        } else {
-            printf("账号密码无效!\n");
-            getchar();
-            return 2;
-        }
-    }
+//    if (argc != 3) {
+//        printf("请输入正确的账号密码!\n");
+//        getchar();
+//        return 1;
+//    } else {
+//        if (strcmp(args[1], "wengzy1920") == 0 && strcmp(args[2], "kalium1910") == 0) { ;
+//        } else {
+//            printf("账号密码无效!\n");
+//            getchar();
+//            return 2;
+//        }
+//    }
+    newtInit();
+    login();
     newtComponent list, fm;
     int p = 1, q = 2, r = 3, s = 4, t = 5, *u;
-    newtInit();
+
     do {
         newtCls();
         newtRefresh();
@@ -161,4 +161,29 @@ int main(int argc, char *args[]) {
         }
     } while (1);
 }
+
+void login() {
+    newtCls();
+    newtRefresh();
+    newtCenteredWindow(100, 10, "请输入帐号密码");
+    newtComponent label1,label2,entry1,entry2,button;
+    button= newtButton(50,6,"登录");
+    label1= newtLabel(30,3,"ID");
+    label2= newtLabel(30,4," ");
+
+
+}
+
+void student_querry() { ; }
+
+void student_addclass() { ; }
+
+void student_delclass() { ; }
+
+
+void admin_lookover() { ; }
+
+void admin_modify() { ; }
+
+void admin_addclass() { ; }
 

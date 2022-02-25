@@ -10,7 +10,7 @@
 #include <csignal>
 #include <cstring>
 #include "DataBase.h"
-
+void login();
 void student_querry();
 void student_addclass();
 void student_delclass();
