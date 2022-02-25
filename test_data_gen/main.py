@@ -89,6 +89,15 @@ def main():
         temp.class_student_link_head=c_void_p(0)
         f_c.write(temp)
 
+    for i in range(resource_num):
+        temp.ID=resources[i]["ID"]
+        temp.day=resources[i]["day"]
+        temp.rank = resources[i]["rank_"]
+        temp.location = resources[i]["location"]
+        temp.first_week = resources[i]["first_week"]
+        temp.last_week = resources[i]["last_week"]
+        temp.odd_even = resources[i]["odd_even_"]
+
     f_s.close()
     f_c.close()
     f_t.close()
