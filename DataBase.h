@@ -148,7 +148,6 @@ uint32_t hashID(uint32_t ID, uint64_t max);
 
 uint32_t get_min_available_ID(const uint32_t *index_list, uint32_t max_num);//自动找一个ID,利用了堆区数组自动零初始化的性质
 
-
 template<typename T, std::size_t N>
 //uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N], const uint32_t *index_list) {
 //    uint32_t hID = ID;
