@@ -60,32 +60,32 @@ enum Biweekly {
 
 /*********实体*************/
 struct teacher_t {
-    uint32_t ID;
-    char name[32];
-    TeacherClassLink teacher_class_link_head;
+    uint32_t ID{0};
+    char name[32]{0};
+    TeacherClassLink teacher_class_link_head=NULL;
 };
 
 struct student_t {
-    uint32_t ID;
-    char name[32];
-    uint8_t age{};
-    bool sex;
-    uint8_t credits = 0;
-    StudentClassLink student_class_link_head;
+    uint32_t ID{0};
+    char name[32]{0};
+    uint8_t age{0};
+    bool sex{false};
+    uint8_t credits{0};
+    StudentClassLink student_class_link_head{0};
 };
 
 struct class_t {
-    uint32_t ID;
-    char name[64];
-    uint8_t type; //0为必修课，1为选修课
-    float credits;
+    uint32_t ID{0};
+    char name[64]{0};
+    uint8_t type{0}; //0为必修课，1为选修课
+    float credits{0};
     //TeacherInfo teachers;  //只存教师的ID,避免老师重名
-    uint16_t max_stu;
-    uint16_t now_stu;
+    uint16_t max_stu{0};
+    uint16_t now_stu{0};
 
-    ClassResourceLink class_resource_link_head;
-    ClassTeacherLink class_teacher_link_head;
-    ClassStudentLink class_student_link_head;
+    ClassResourceLink class_resource_link_head{0};
+    ClassTeacherLink class_teacher_link_head{0};
+    ClassStudentLink class_student_link_head{0};
 
 };
 
@@ -102,18 +102,18 @@ struct resource_t {
 
 /***********关系***********/
 struct class_resource_t {
-    uint32_t class_ID;
-    uint32_t recourse_ID;
+    uint32_t class_ID{0};
+    uint32_t recourse_ID{0};
 };
 
 struct class_teacher_t {
-    uint32_t class_ID;
-    uint32_t teacher_ID;
+    uint32_t class_ID{0};
+    uint32_t teacher_ID{0};
 };
 
 struct class_student_t {
-    uint32_t class_ID;
-    uint32_t student_ID;
+    uint32_t class_ID{0};
+    uint32_t student_ID{0};
 };
 
 //从文本添加课程
