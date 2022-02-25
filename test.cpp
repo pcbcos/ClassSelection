@@ -82,28 +82,66 @@ void rootwin_show() {
     sleep(1);
 }
 
+//void student_mode() {
+//    newtComponent form, label, entry, button, cb;
+//    char *entryValue;
+//    newtCls();
+//    newtCenteredWindow(50, 10, "");
+//    /*left,top 是相对于中心窗口而言 */
+//    label = newtLabel(10, 1, "请输入 :");
+//    entry = newtEntry(19, 1, NULL, 20, (const char **) &entryValue, NEWT_FLAG_SCROLL);
+//    newtEntrySet(entry, "\0", 0);
+//    button = newtButton(10, 5, "完全按钮");
+//    cb = newtCompactButton(25, 5, "紧缩按钮");
+//    form = newtForm(NULL, NULL, 0);
+//    newtFormAddComponents(form, label, entry, button, cb, NULL);
+//    newtRunForm(form);
+//    if (*entryValue != '\0') {
+//        newtDrawRootText(0, 0, "你输入了 :");
+//        newtDrawRootText(12, 0, entryValue);
+//    } else
+//        newtDrawRootText(0, 0, "无输入 !");
+//    newtRefresh();
+//    newtFormDestroy(form);
+//    sleep(5);
+//}
+void student_querry() { ; }
+
+void student_addclass() { ; }
+
+void student_delclass() { ; }
+
 void student_mode() {
-    newtComponent form, label, entry, button, cb;
-    char *entryValue;
-    newtCls();
-    newtCenteredWindow(50, 10, "");
-    /*left,top 是相对于中心窗口而言 */
-    label = newtLabel(10, 1, "请输入 :");
-    entry = newtEntry(19, 1, NULL, 20, (const char **) &entryValue, NEWT_FLAG_SCROLL);
-    newtEntrySet(entry, "\0", 0);
-    button = newtButton(10, 5, "完全按钮");
-    cb = newtCompactButton(25, 5, "紧缩按钮");
+    int p = 1, q = 2, r = 3, s = 4, *u;
+    newtComponent list, form;
+    newtCenteredWindow(50, 10, "请选择您的操作");
+    list = newtListbox(18, 3, 5, NEWT_FLAG_RETURNEXIT);
+    newtListboxAppendEntry(list, "查询课程信息、成绩", &p);
+    newtListboxAppendEntry(list, "选课", &q);
+    newtListboxAppendEntry(list, "退课", &r);
+    newtListboxAppendEntry(list, "退出", &s);
+    newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
     form = newtForm(NULL, NULL, 0);
-    newtFormAddComponents(form, label, entry, button, cb, NULL);
+    newtFormAddComponent(form, list);
     newtRunForm(form);
-    if (*entryValue != '\0') {
-        newtDrawRootText(0, 0, "你输入了 :");
-        newtDrawRootText(12, 0, entryValue);
-    } else
-        newtDrawRootText(0, 0, "无输入 !");
-    newtRefresh();
+    u = (int *) newtListboxGetCurrent(list);
+    newtPopWindow();
     newtFormDestroy(form);
-    sleep(5);
+    switch (*u) {
+        case 1:
+            student_querry();
+            break;
+        case 2:
+            student_addclass();
+            break;
+        case 3:
+            student_delclass();
+            break;
+        case 4:
+            return;
+    }
+
+
 }
 
 void check_radio() {
