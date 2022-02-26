@@ -126,7 +126,7 @@ int main() {
     read_class_data();
     read_resource_data();
     read_teacher_data();
-#define TEST_MENU 0
+#define TEST_MENU 1
 #if TEST_MENU
     newtInit();
     login();

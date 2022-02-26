@@ -183,7 +183,7 @@ uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N]) {
     uint32_t i = 0;
     uint32_t m = 32;
     auto *result = (uint32_t *) malloc(32 * 4);
-    memset(result, 0, 32);
+    memset(result, 0, 32*sizeof(uint32_t));
     if (ID) {
         uint32_t index = get_index_by_ID(ID, entity_list);
         result[i++] = index;
@@ -194,7 +194,7 @@ uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N]) {
                 result[i++] = index;
                 if (i == m) {
                     result = (uint32_t *) realloc(result, (m + 32) * 4);
-                    memset(result + m, 0, 32);
+                    memset(result + m, 0, 32*sizeof(uint32_t));
                     m += 32;
                 }
             }
