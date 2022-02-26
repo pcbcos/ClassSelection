@@ -60,7 +60,7 @@
 #include <newt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <csignal>
+#include "unistd.h"
 #include <cstring>
 
 void rootwin_show() {
