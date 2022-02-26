@@ -1,3 +1,6 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "modernize-use-nullptr"
+
 #include "main.h"
 
 uint32_t ID;
@@ -163,27 +166,27 @@ int main() {
     } while (1);
 #else
 
-//    for (auto &s: student_list) {
-//        if (s.ID) {
-//            printf("NAME=%s,ID=%d\n", s.name, s.ID);
-//        }
-//    }
-//    for (uint32_t index = 1; index < MAX_STUDENT_NUM; index++) {
-//        if (strcmp("翁湛阳", student_list[index].name) == 0) {
-//            printf("index=%d",index);
-//            break;
-//        }
-//    }
-//    uint32_t* r=widesearch(0, "测试", resource_list);
-//
-//    for (int i = 0; i < 32; i++) {
-//        resource_t s = resource_list[r[i]];
-//        printf("name=%s\tID=%d\n", s.name, s.ID);
-//    }
-    for (auto &r: resource_list) {
-        if(r.ID)
-        printf("name=%s\tID=%d\n", r.name, r.ID);
-    }
+    //    for (auto &s: student_list) {
+    //        if (s.ID) {
+    //            printf("NAME=%s,ID=%d\n", s.name, s.ID);
+    //        }
+    //    }
+    //    for (uint32_t index = 1; index < MAX_STUDENT_NUM; index++) {
+    //        if (strcmp("翁湛阳", student_list[index].name) == 0) {
+    //            printf("index=%d",index);
+    //            break;
+    //        }
+    //    }
+    //    uint32_t* r=widesearch(0, "测试", resource_list);
+    //
+    //    for (int i = 0; i < 32; i++) {
+    //        resource_t s = resource_list[r[i]];
+    //        printf("name=%s\tID=%d\n", s.name, s.ID);
+    //    }
+        for (auto &r: resource_list) {
+            if(r.ID)
+            printf("name=%s\tID=%d\n", r.name, r.ID);
+        }
 
 
 #endif
@@ -250,7 +253,10 @@ void admin_modify() {
     char *entryValue;
 
     newtCls();
-    newtCenteredWindow(50, 10, "管理员模式-修改记录");
+    //newtCenteredWindow(50, 10, "管理员模式-修改记录");
+
+    newtOpenWindow(100, 5, 50, 40, "查询结果");
+    newtOpenWindow(40, 20, 50, 10, "管理员模式-修改记录");
     /*left,top 是相对于中心窗口而言 */
     label1 = newtLabel(10, 1, "请输入查询信息:");
     entry = newtEntry(25, 1, "小明", 20, (const char **) &entryValue, NEWT_FLAG_SCROLL);
@@ -288,7 +294,7 @@ void admin_modify() {
         newtDrawRootText(0, 0, "你查询的字段是:");
         newtDrawRootText(16, 0, entryValue);
         uint32_t id = atoi(entryValue);
-        uint32_t *result;
+        uint32_t *result = NULL;
 
         if (id) {
             switch (type) {
@@ -305,7 +311,6 @@ void admin_modify() {
         } else {
             switch (type) {
                 case 0:
-
                     result = widesearch(0, entryValue, student_list);
                     break;
                 case 1:
@@ -316,11 +321,39 @@ void admin_modify() {
                     break;
             }
         }
+//        char text[32] = {0};
+//        sprintf(text, "index=%d", result[0]);
+//        show_warning_win(text);
+        //newtCls();
+        newtPopWindowNoRefresh();
 
-        char text[32] = {0};
-        sprintf(text, "index=%d", result[0]);
-        show_warning_win(text);
+        newtComponent list, form2;
+        size_t N;
+        for (N = 0; result[N] != 0; N++);
+        list = newtListbox(2, 2, N, NEWT_FLAG_RETURNEXIT);
+        form2 = newtForm(NULL, NULL, 0);
+        int *num = (int *) malloc(sizeof(int) * N);
+        memset(num, 0, sizeof(int) * N);
+        for (int i = 0; i < N; i++) {
+            num[i] = i + 1;
+        }
+        for (int i = 0; i < N; i++) {
+            newtListboxAppendEntry(list, student_list[result[i]].name, num + i);
+        }
+        newtFormAddComponent(form2, list);
+        newtRunForm(form2);
+        int *u = (int *) newtListboxGetCurrent(list);
+        newtDrawRootText(0,0,"                      ");
 
+        newtDrawRootText(0, 0, "你选中了:");
+        newtDrawRootText(9, 0, student_list[result[(*u) - 1]].name);
+        newtRefresh();
+        sleep(2);
+        //int num[]
+
+        if (result) {
+            free(result);
+        }
     } else {
         newtDrawRootText(0, 0, "无输入 !");
     }
@@ -328,7 +361,10 @@ void admin_modify() {
 
     newtRefresh();
     newtFormDestroy(form);
+
 }
 
 void admin_addclass() { ; }
 
+
+#pragma clang diagnostic pop
