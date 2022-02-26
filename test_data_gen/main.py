@@ -43,7 +43,7 @@ class resource_t(Structure):
                 ("location", c_char * 64),
                 ("first_week", c_uint8),
                 ("last_week", c_uint8),
-                ("odd_even", c_uint32)
+                ("odd_even", c_int)
                 ]
 
 
@@ -90,10 +90,11 @@ def main():
         f_c.write(temp)
 
     for i in range(resource_num):
+        temp=resource_t()
         temp.ID=resources[i]["ID"]
         temp.day=resources[i]["day"]
         temp.rank = resources[i]["rank_"]
-        temp.location = resources[i]["location"]
+        temp.location = bytes(resources[i]["location"],encoding="UTF-8")
         temp.first_week = resources[i]["first_week"]
         temp.last_week = resources[i]["last_week"]
         temp.odd_even = resources[i]["odd_even_"]

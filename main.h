@@ -5,9 +5,6 @@
 #ifndef CLASSSELECTION_MAIN_H
 #define CLASSSELECTION_MAIN_H
 
-#ifndef TEST_MENU
-#define TEST_MENU 1
-#endif
 
 #include <newt.h>
 #include <cstdio>
