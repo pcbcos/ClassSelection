@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.20)
+project(ClassSelection C CXX)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
+
+include_directories(include)
+link_directories(lib)
+
+add_library(core STATIC DataBase.cpp LinkList.cpp)
+add_definitions(-DTEST_MENU=1)
+add_executable(ClassSelection main.cpp)
+add_executable(Test test.cpp)
+target_link_libraries(ClassSelection newt core)
+target_link_libraries(Test  newt core)
