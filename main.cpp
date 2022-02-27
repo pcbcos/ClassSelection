@@ -131,32 +131,65 @@ void admin_querry() {
         for (int i = 0; i < N; i++) {
             num[i] = i + 1;
         }
-        for (int i = 0; i < N; i++) {
-            newtListboxAppendEntry(list, student_list[result[i]].name, num + i);
-        }
-        newtFormAddComponent(form2, list);
-        newtRunForm(form2);
-        int *u = (int *) newtListboxGetCurrent(list);
-        newtDrawRootText(0, 0, "                      ");
+        switch (type) {
+            case 0: {
+                for (int i = 0; i < N; i++) {
+                    newtListboxAppendEntry(list, student_list[result[i]].name, num + i);
+                }
+                newtFormAddComponent(form2, list);
+                newtRunForm(form2);
+            }
+                break;
+            case 1: {
+                for (int i = 0; i < N; i++) {
+                    newtListboxAppendEntry(list, class_list[result[i]].name, num + i);
+                }
+                newtFormAddComponent(form2, list);
+                newtRunForm(form2);
+            }
 
-        newtDrawRootText(0, 0, "你选中了:");
-        newtDrawRootText(9, 0, student_list[result[(*u) - 1]].name);
+                break;
+            case 2: {
+                for (int i = 0; i < N; i++) {
+                    newtListboxAppendEntry(list, teacher_list[result[i]].name, num + i);
+                }
+                newtFormAddComponent(form2, list);
+                newtRunForm(form2);
+            }
+
+                break;
+
+        }
+
+        int *u = (int *) newtListboxGetCurrent(list);
+//        newtDrawRootText(0, 0, "                      ");
+//
+//        newtDrawRootText(0, 0, "你选中了:");
+//        newtDrawRootText(9, 0, student_list[result[(*u) - 1]].name);
+        char text[128] = {0};
+        student_t s;
+        class_t cc;
+        teacher_t t;
+        switch (type) {
+            case 0:
+                s = student_list[result[*u - 1]];
+                sprintf(text, "ID:%d,姓名:%s,性别:%lc,年龄:%d,学分%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age, s.credits);
+                break;
+            case 1:
+                cc = class_list[result[*u - 1]];
+                sprintf(text,"ID:%d,课程名称:%s,课程类型:%s,学分:%d,上课时间和地点:%s",cc.ID,cc.name,cc.type?"选修":"必修",cc.credits,"待完善");
+                break;
+            case 2:
+                t = teacher_list[result[*u - 1]];
+                sprintf(text, "ID:%d,姓名%s", t.ID, t.name);
+                break;
+        }
+//        wchar_t sex = s.sex ? L'女' : L'男';
+//        sprintf(text, "姓名:%s\n学号:%d\n性别:%lc\n已获得学分:%d\n", s.name, s.ID, sex, s.credits);
+//        sprintf(text, "ID=%d 姓名=%s 性别=%lc ")
+        show_warning_win(text);
         newtRefresh();
-//        char c = getchar();
-//        if (c) {
-//            newtComponent form3,list2;
-//            list2 = newtListbox(2, 2, N, NEWT_FLAG_RETURNEXIT);
-//            newtListboxAppendEntry(list2,"test",num+1);
-//            newtFormDestroy(form2);
-//
-//            newtCls();
-//
-//            form3=newtForm(NULL,NULL,0);
-//            newtFormAddComponent(form3,list2);
-//            newtRunForm(form3);
-//        }
         sleep(2);
-        //int num[]
 
         if (result) {
             free(result);
