@@ -45,7 +45,10 @@ void admin_querry() {
     char *entryValue;
 
     newtCls();
-    newtCenteredWindow(50, 10, "管理员模式-查询记录");
+    //newtCenteredWindow(50, 10, "管理员模式-修改记录");
+
+    newtOpenWindow(100, 5, 50, 40, "查询结果");
+    newtOpenWindow(40, 20, 50, 10, "管理员模式-修改记录");
     /*left,top 是相对于中心窗口而言 */
     label1 = newtLabel(10, 1, "请输入查询信息:");
     entry = newtEntry(25, 1, "小明", 20, (const char **) &entryValue, NEWT_FLAG_SCROLL);
@@ -60,24 +63,112 @@ void admin_querry() {
     newtFormAddComponents(form, label1, label2, entry, rb[0], rb[1], rb[2], button, NULL);
     newtPushHelpLine("< 空格健 > 选择");
     newtRunForm(form);
+    uint8_t type = 0;
     for (int i = 0; i < 3; i++) {
         if (newtRadioGetCurrent(rb[0]) == rb[i]) {
             newtDrawRootText(0, 2, "您查询的类别是:");
-            if (i == 0)newtDrawRootText(16, 2, "学生");
-            if (i == 1)newtDrawRootText(16, 2, "课程");
-            if (i == 2)newtDrawRootText(16, 2, "教师");
+            if (i == 0) {
+                newtDrawRootText(16, 2, "学生");
+                type = 0;
+            }
+            if (i == 1) {
+                newtDrawRootText(16, 2, "课程");
+                type = 1;
+            }
+            if (i == 2) {
+                newtDrawRootText(16, 2, "教师");
+                type = 2;
+            }
         }
     }
-
-
     if (*entryValue != '\0') {
         newtDrawRootText(0, 0, "你查询的字段是:");
         newtDrawRootText(16, 0, entryValue);
-    } else
+        uint32_t id = atoi(entryValue);
+        uint32_t *result = NULL;
+
+        if (id) {
+            switch (type) {
+                case 0:
+                    result = widesearch(id, NULL, student_list);
+                    break;
+                case 1:
+                    result = widesearch(id, NULL, class_list);
+                    break;
+                case 2:
+                    result = widesearch(id, NULL, teacher_list);
+                    break;
+            }
+        } else {
+            switch (type) {
+                case 0:
+                    result = widesearch(0, entryValue, student_list);
+                    break;
+                case 1:
+                    result = widesearch(0, entryValue, class_list);
+                    break;
+                case 2:
+                    result = widesearch(0, entryValue, teacher_list);
+                    break;
+            }
+        }
+        newtPopWindowNoRefresh();
+
+        newtComponent list, form2;
+        size_t N;
+        for (N = 0; result[N] != 0; N++);
+        if (N == 0) {
+            free(result);
+            show_warning_win("找不到!");
+            newtRefresh();
+            newtFormDestroy(form);
+            return;
+        }
+        list = newtListbox(2, 2, N, NEWT_FLAG_RETURNEXIT);
+        form2 = newtForm(NULL, NULL, 0);
+        int *num = (int *) malloc(sizeof(int) * N);
+        memset(num, 0, sizeof(int) * N);
+        for (int i = 0; i < N; i++) {
+            num[i] = i + 1;
+        }
+        for (int i = 0; i < N; i++) {
+            newtListboxAppendEntry(list, student_list[result[i]].name, num + i);
+        }
+        newtFormAddComponent(form2, list);
+        newtRunForm(form2);
+        int *u = (int *) newtListboxGetCurrent(list);
+        newtDrawRootText(0, 0, "                      ");
+
+        newtDrawRootText(0, 0, "你选中了:");
+        newtDrawRootText(9, 0, student_list[result[(*u) - 1]].name);
+        newtRefresh();
+//        char c = getchar();
+//        if (c) {
+//            newtComponent form3,list2;
+//            list2 = newtListbox(2, 2, N, NEWT_FLAG_RETURNEXIT);
+//            newtListboxAppendEntry(list2,"test",num+1);
+//            newtFormDestroy(form2);
+//
+//            newtCls();
+//
+//            form3=newtForm(NULL,NULL,0);
+//            newtFormAddComponent(form3,list2);
+//            newtRunForm(form3);
+//        }
+        sleep(2);
+        //int num[]
+
+        if (result) {
+            free(result);
+        }
+    } else {
         newtDrawRootText(0, 0, "无输入 !");
+    }
+
+
     newtRefresh();
     newtFormDestroy(form);
-    sleep(10);
+
 }
 
 
@@ -270,7 +361,6 @@ void admin_modify() {
     rb[2] = newtRadiobutton(30, 3, "教师", 0, rb[1]);
     newtFormAddComponents(form, label1, label2, entry, rb[0], rb[1], rb[2], button, NULL);
     newtPushHelpLine("< 空格健 > 选择");
-
     newtRunForm(form);
     uint8_t type = 0;
     for (int i = 0; i < 3; i++) {
@@ -321,16 +411,12 @@ void admin_modify() {
                     break;
             }
         }
-//        char text[32] = {0};
-//        sprintf(text, "index=%d", result[0]);
-//        show_warning_win(text);
-        //newtCls();
         newtPopWindowNoRefresh();
 
         newtComponent list, form2;
         size_t N;
         for (N = 0; result[N] != 0; N++);
-        if(N==0){
+        if (N == 0) {
             free(result);
             show_warning_win("找不到!");
             newtRefresh();
@@ -350,11 +436,24 @@ void admin_modify() {
         newtFormAddComponent(form2, list);
         newtRunForm(form2);
         int *u = (int *) newtListboxGetCurrent(list);
-        newtDrawRootText(0,0,"                      ");
+        newtDrawRootText(0, 0, "                      ");
 
         newtDrawRootText(0, 0, "你选中了:");
         newtDrawRootText(9, 0, student_list[result[(*u) - 1]].name);
         newtRefresh();
+//        char c = getchar();
+//        if (c) {
+//            newtComponent form3,list2;
+//            list2 = newtListbox(2, 2, N, NEWT_FLAG_RETURNEXIT);
+//            newtListboxAppendEntry(list2,"test",num+1);
+//            newtFormDestroy(form2);
+//
+//            newtCls();
+//
+//            form3=newtForm(NULL,NULL,0);
+//            newtFormAddComponent(form3,list2);
+//            newtRunForm(form3);
+//        }
         sleep(2);
         //int num[]
 
