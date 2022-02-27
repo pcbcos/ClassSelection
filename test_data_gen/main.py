@@ -3,10 +3,10 @@ import ctypes
 from GEN import *
 from ctypes import *
 
-student_num = 2000
-class_num = 200
-teacher_num = 5
-resource_num = 5
+student_num = 512
+class_num = 8
+teacher_num = 50
+resource_num = 16
 
 
 class student_t(Structure):

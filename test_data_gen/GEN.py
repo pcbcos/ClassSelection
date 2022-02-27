@@ -10,9 +10,8 @@ class MyProvider(BaseProvider):
 
     def student(self):
         age = random.randint(19, 23)
-        ID = 19000000 + random.choice([19, 20, 21, 22]) * 10000 + random.randint(0, 16) * 100 + random.randint(0, 32)
+        ID = 19000000 + 20 * 10000 + random.randint(0, 16) * 100 + random.randint(0, 32)
         sex = random.choice(['男', '女'])
-
         if sex == '男':
             name = self.ifake.unique.name_male()
         else:

@@ -48,7 +48,7 @@ void admin_querry() {
     //newtCenteredWindow(50, 10, "管理员模式-修改记录");
 
     newtOpenWindow(100, 5, 50, 40, "查询结果");
-    newtOpenWindow(40, 20, 50, 10, "管理员模式-修改记录");
+    newtOpenWindow(40, 20, 50, 10, "管理员模式-查询记录");
     /*left,top 是相对于中心窗口而言 */
     label1 = newtLabel(10, 1, "请输入查询信息:");
     entry = newtEntry(25, 1, "小明", 20, (const char **) &entryValue, NEWT_FLAG_SCROLL);
@@ -177,7 +177,8 @@ void admin_querry() {
                 break;
             case 1:
                 cc = class_list[result[*u - 1]];
-                sprintf(text,"ID:%d,课程名称:%s,课程类型:%s,学分:%d,上课时间和地点:%s",cc.ID,cc.name,cc.type?"选修":"必修",cc.credits,"待完善");
+                sprintf(text, "ID:%d,课程名称:%s,课程类型:%s,学分:%.1f,上课时间和地点:%s", cc.ID, cc.name, cc.type ? "选修" : "必修",
+                        cc.credits, "待完善");
                 break;
             case 2:
                 t = teacher_list[result[*u - 1]];
@@ -189,7 +190,7 @@ void admin_querry() {
 //        sprintf(text, "ID=%d 姓名=%s 性别=%lc ")
         show_warning_win(text);
         newtRefresh();
-        sleep(2);
+
 
         if (result) {
             free(result);
