@@ -137,6 +137,7 @@ void dump_teacher_data(char mode); //将教师的信息存入磁盘
 
 void DataBaseInit();//数据库初始化
 void show_warning_win(char *text);//显示错误信息
+void show_info_win(char *text);
 void read_student_data();
 
 void read_teacher_data();

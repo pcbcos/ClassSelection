@@ -100,6 +100,12 @@ def main():
         temp.odd_even = resources[i]["odd_even_"]
         f_r.write(temp)
 
+    for i in range(teacher_num):
+        temp=teacher_t()
+        temp.ID=teachers[i]["ID"]
+        temp.name=bytes(teachers[i]["name"],encoding="UTF-8")
+        f_t.write(temp)
+
     f_s.close()
     f_c.close()
     f_t.close()
