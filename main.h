@@ -30,4 +30,6 @@ void admin_modify();
 
 void admin_addclass();
 
+void callback(void* data);
+
 #endif //CLASSSELECTION_MAIN_H

@@ -168,11 +168,12 @@ void admin_lookover() {
 //    newtDrawRootText(0,0,text);
 //    newtRefresh();
 //开始做列表的渲染,默认是升序的
+    show_info_win("阿巴阿巴");
     newtFormDestroy(form);
     newtRefresh();
 
 
-    sleep(5);
+//    sleep(5);
 }
 
 void admin_querry() {
@@ -384,7 +385,7 @@ void admin_modify() {
     //newtCenteredWindow(50, 10, "管理员模式-修改记录");
 
     newtOpenWindow(100, 5, 50, 40, "查询结果");
-    newtOpenWindow(40, 20, 50, 12, "管理员模式-查询记录");
+    newtOpenWindow(40, 20, 50, 12, "管理员模式-修改记录");
     /*left,top 是相对于中心窗口而言 */
     label1 = newtLabel(10, 1, "请输入查询信息:");
     entry = newtEntry(25, 1, "小明", 20, (const char **) &entryValue, NEWT_FLAG_SCROLL);
@@ -587,6 +588,7 @@ int main() {
 
 #if TEST_MENU
     newtInit();
+    newtSetSuspendCallback(callback, NULL);
     login();
     newtComponent list, fm;
     int p = 1, q = 2, r = 3, s = 4, t = 5, *u;
@@ -646,6 +648,14 @@ int main() {
 
 #endif
     return 0;
+}
+
+void callback(void *data) {
+    newtCls();
+    newtRefresh();
+    newtFinished();
+    printf("Hello,world!\n");
+    exit(1);
 }
 
 
