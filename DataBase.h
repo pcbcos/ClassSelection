@@ -138,6 +138,7 @@ void dump_teacher_data(char mode); //将教师的信息存入磁盘
 void DataBaseInit();//数据库初始化
 void show_warning_win(char *text);//显示错误信息
 void show_info_win(char *text);
+
 void read_student_data();
 
 void read_teacher_data();
@@ -146,9 +147,7 @@ void read_class_data();
 
 void read_resource_data();
 
-
 uint32_t hashID(uint32_t ID, uint64_t max);
-
 
 uint32_t get_min_available_ID(const uint32_t *index_list, uint32_t max_num);//自动找一个ID,利用了堆区数组自动零初始化的性质
 
@@ -203,7 +202,6 @@ uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N], co
             }
         }
     }
-
     switch (rank) {
         case 1:
             std::sort(result, result + i, [&](uint32_t e1, uint32_t e2) {
@@ -217,9 +215,31 @@ uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N], co
             break;
         default:
             break;
-
     }
     return result;
 }
+
+
+template<typename T, std::size_t N>
+uint32_t get_max_ID(T(&entity_list)[N]) {
+    return std::max_element(entity_list, entity_list + N, [](const T &e1, const T &e2) {
+                                return e1.ID < e2.ID;
+                            }
+    )->ID;
+}
+
+template<typename T, std::size_t N>
+uint32_t get_min_ID(T(&entity_list)[N]) {
+    return std::min_element(entity_list, entity_list + N, [](const T &e1, const T &e2) {
+        if (e1.ID && e2.ID) {
+            return e1.ID < e2.ID;
+        } else if (e1.ID == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    })->ID;
+}
+
 
 #endif //CLASSSELECTION_DATABASE_H

@@ -143,6 +143,7 @@ void admin_lookover() {
     newtComponent form, label1, label2, label3, entry1, entry2, button, rb[3];
     char *estart_ID;
     char *eend_ID;
+    uint8_t type = 0;
     rb[0] = newtRadiobutton(12, 2, "学生", 1, NULL);
     rb[1] = newtRadiobutton(22, 2, "课程", 0, rb[0]);
     rb[2] = newtRadiobutton(32, 2, "教师", 0, rb[1]);
@@ -161,16 +162,101 @@ void admin_lookover() {
     newtRunForm(form);
     char *start_id = newtEntryGetValue(entry1);
     char *end_id = newtEntryGetValue(entry2);
+    uint8_t ALL = 0;
     uint32_t ustart_id = atoi(start_id);
     uint32_t uend_id = atoi(end_id);
-//    char text[32]{};
-//    sprintf(text,"%d",ustart_id);
-//    newtDrawRootText(0,0,text);
-//    newtRefresh();
+    for (int i = 0; i < 3; i++) {
+        if (newtRadioGetCurrent(rb[0]) == rb[i]) {
+            type = i;
+        }
+    }
+    if (start_id[0] == '*' || end_id[0] == '*') {
+        //输出所有
+        ALL = 1;
+        goto make_list;
+    }
+
+
+
+    //id合法性检验
+    if (!ustart_id || !uend_id) {
+        show_warning_win("ID非法,ID不能为0");
+        newtComponentDestroy(form);
+        return;
+    }
+
 //开始做列表的渲染,默认是升序的
-    show_info_win("阿巴阿巴");
+    make_list:
     newtFormDestroy(form);
     newtRefresh();
+    newtCls();
+    newtRefresh();
+    newtComponent form2, list;
+    form2 = newtForm(NULL, NULL, 0);
+    newtCenteredWindow(80, 30, "浏览模式");
+    list = newtListbox(1, 1, 28, NEWT_ENTRY_RETURNEXIT);
+    newtListboxSetWidth(list, 48);
+    student_t s;
+    teacher_t t;
+    class_t c;
+    char text[64]{};
+    uint32_t *index;
+    if (ALL) {
+        switch (type) {
+            case 0:
+                ustart_id = get_min_ID(student_list);
+                uend_id = get_max_ID(student_list);
+                break;
+            case 1:
+                ustart_id = get_min_ID(class_list);
+                uend_id = get_max_ID(class_list);
+                break;
+            case 2:
+                ustart_id = get_min_ID(teacher_list);
+                uend_id = get_max_ID(teacher_list);
+                break;
+        }
+    }
+    uint32_t zero_return = 0;
+    newtListboxAppendEntry(list, "返回", &zero_return);
+    switch (type) {
+        case 0:
+            for (uint32_t id = ustart_id; id <= uend_id; id++) {
+                s = student_list[get_index_by_ID(id, student_list)];
+                if (s.ID) {
+                    sprintf(text, "ID:%d\t姓名:%s", s.ID, s.name);
+                    newtListboxAppendEntry(list, text, index + id);
+                    memset(text, 0, 64);
+                }
+            }
+            break;
+        case 1:
+            for (uint32_t id = ustart_id; id <= uend_id; id++) {
+                c = class_list[get_index_by_ID(id, class_list)];
+                if (c.ID) {
+                    sprintf(text, "ID:%d\t课程名称:%s", c.ID, c.name);
+                    newtListboxAppendEntry(list, text, index + id);
+                    memset(text, 0, 64);
+                }
+            }
+            break;
+        case 2:
+            for (uint32_t id = ustart_id; id <= uend_id; id++) {
+                t = teacher_list[get_index_by_ID(id, teacher_list)];
+                if (t.ID) {
+                    sprintf(text, "ID:%d\t姓名:%s", t.ID, t.name);
+                    newtListboxAppendEntry(list, text, index + id);
+                    memset(text, 0, 64);
+                }
+            }
+            break;
+    }
+    free(index);
+
+    newtFormAddComponents(form2, list, NULL);
+    newtRunForm(form2);
+    newtFormDestroy(form2);
+
 
 
 //    sleep(5);
@@ -640,11 +726,12 @@ int main() {
     //        resource_t s = resource_list[r[i]];
     //        printf("name=%s\tID=%d\n", s.name, s.ID);
     //    }
-        for (auto &r: teacher_list) {
-            if(r.ID)
-            printf("name=%s\tID=%d\n", r.name, r.ID);
-        }
-
+//    for (auto &c: class_list) {
+//        if (c.ID)
+//            printf("name=%s\tID=%d\n", c.name, c.ID);
+//    }
+//printf("Hello,world\n");
+    //printf("maxID=%d\tminID=%d", get_max_ID(class_list), get_min_ID(class_list));
 
 #endif
     return 0;
