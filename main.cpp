@@ -40,190 +40,6 @@ void student_mode() {
 }
 
 
-void admin_querry() {
-    newtComponent form, label1, label2, entry, button, rb[3], rankrule[3], label3;
-    char *entryValue;
-
-    newtCls();
-    //newtCenteredWindow(50, 10, "管理员模式-修改记录");
-
-    newtOpenWindow(100, 5, 50, 40, "查询结果");
-    newtOpenWindow(40, 20, 50, 12, "管理员模式-查询记录");
-    /*left,top 是相对于中心窗口而言 */
-    label1 = newtLabel(10, 1, "请输入查询信息:");
-    entry = newtEntry(25, 1, "小明", 20, (const char **) &entryValue, NEWT_FLAG_SCROLL);
-    newtEntrySet(entry, "\0", 0);
-    button = newtButton(22, 6, "确认");
-    form = newtForm(NULL, NULL, 0);
-
-    label2 = newtLabel(6, 3, "查询类别:");
-    rb[0] = newtRadiobutton(15, 3, "学生", 1, NULL);
-    rb[1] = newtRadiobutton(25, 3, "课程", 0, rb[0]);
-    rb[2] = newtRadiobutton(35, 3, "教师", 0, rb[1]);
-
-    label3 = newtLabel(6, 4, "排序依据:");
-    rankrule[0] = newtRadiobutton(15, 4, "无序", 1, NULL);
-    rankrule[1] = newtRadiobutton(25, 4, "ID升序", 0, rankrule[0]);
-    rankrule[2] = newtRadiobutton(35, 4, "ID降序", 0, rankrule[1]);
-    newtFormAddComponents(form, label1, label2, label3, entry, rb[0], rb[1], rb[2], rankrule[0], rankrule[1],
-                          rankrule[2], button, NULL);
-
-    newtPushHelpLine("< 空格健 > 选择");
-    newtRunForm(form);
-    uint8_t type = 0;
-    uint8_t rank = 0;//是否排序,升序/降序
-    for (int i = 0; i < 3; i++) {
-        if (newtRadioGetCurrent(rb[0]) == rb[i]) {
-            newtDrawRootText(0, 2, "您查询的类别是:");
-            if (i == 0) {
-                newtDrawRootText(16, 2, "学生");
-                type = 0;
-            }
-            if (i == 1) {
-                newtDrawRootText(16, 2, "课程");
-                type = 1;
-            }
-            if (i == 2) {
-                newtDrawRootText(16, 2, "教师");
-                type = 2;
-            }
-        }
-    }
-    for (int i = 0; i < 3; i++) {
-        if (newtRadioGetCurrent(rankrule[0]) == rankrule[i]) {
-            newtDrawRootText(0, 3, "排序依据:");
-            switch (i) {
-                case 1:
-                    newtDrawRootText(9, 3, "ID升序");
-                    break;
-                case 2:
-                    newtDrawRootText(9, 3, "ID降序");
-                    break;
-                default:
-                    newtDrawRootText(9, 3, "无序");
-                    break;
-            }
-            rank = i;
-        }
-    }
-    if (*entryValue != '\0') {
-        newtDrawRootText(0, 0, "你查询的字段是:");
-        newtDrawRootText(16, 0, entryValue);
-        uint32_t id = atoi(entryValue);
-        uint32_t *result = NULL;
-        if (id) {
-            switch (type) {
-                case 0:
-                    result = widesearch(id, NULL, student_list, rank);
-                    break;
-                case 1:
-                    result = widesearch(id, NULL, class_list, rank);
-                    break;
-                case 2:
-                    result = widesearch(id, NULL, teacher_list, rank);
-                    break;
-            }
-        } else {
-            switch (type) {
-                case 0:
-                    result = widesearch(0, entryValue, student_list, rank);
-                    break;
-                case 1:
-                    result = widesearch(0, entryValue, class_list, rank);
-                    break;
-                case 2:
-                    result = widesearch(0, entryValue, teacher_list, rank);
-                    break;
-            }
-        }
-        newtPopWindowNoRefresh();
-
-        newtComponent list, form2;
-        size_t N;
-        for (N = 0; result[N] != 0; N++);
-        if (N == 0) {
-            free(result);
-            show_warning_win("找不到!");
-            newtRefresh();
-            newtFormDestroy(form);
-            return;
-        }
-        list = newtListbox(1, 2, N, NEWT_FLAG_RETURNEXIT);
-        form2 = newtForm(NULL, NULL, 0);
-        int *num = (int *) malloc(sizeof(int) * N);
-        memset(num, 0, sizeof(int) * N);
-        for (int i = 0; i < N; i++) {
-            num[i] = i + 1;
-        }
-        char itemtext[64]{};
-        newtListboxSetWidth(list, 40);
-        switch (type) {
-            case 0: {
-                for (int i = 0; i < N; i++) {
-                    sprintf(itemtext, "ID:%d\t姓名:%s", student_list[result[i]].ID, student_list[result[i]].name);
-                    newtListboxAppendEntry(list, itemtext, num + i);
-                    memset(itemtext, 0, 64);
-                }
-                newtFormAddComponent(form2, list);
-                newtRunForm(form2);
-            }
-                break;
-            case 1: {
-                for (int i = 0; i < N; i++) {
-                    sprintf(itemtext, "ID:%d\t课程名称:%s(%s)", class_list[result[i]].ID, class_list[result[i]].name,
-                            class_list[result[i]].type ? "选修" : "必修");
-                    newtListboxAppendEntry(list, itemtext, num + i);
-                    memset(itemtext, 0, 64);
-                }
-                newtFormAddComponent(form2, list);
-                newtRunForm(form2);
-            }
-
-                break;
-            case 2: {
-                for (int i = 0; i < N; i++) {
-                    sprintf(itemtext, "ID:%d\t姓名:%s", teacher_list[result[i]].ID, teacher_list[result[i]].name);
-                    newtListboxAppendEntry(list, itemtext, num + i);
-                    memset(itemtext, 0, 64);
-                }
-                newtFormAddComponent(form2, list);
-                newtRunForm(form2);
-            }
-                break;
-        }
-        int *u = (int *) newtListboxGetCurrent(list);
-        char text[128] = {0};
-        student_t s;
-        class_t cc;
-        teacher_t t;
-        switch (type) {
-            case 0:
-                s = student_list[result[*u - 1]];
-                sprintf(text, "ID:%d,姓名:%s,性别:%lc,年龄:%d,学分%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age, s.credits);
-                break;
-            case 1:
-                cc = class_list[result[*u - 1]];
-                sprintf(text, "ID:%d,课程名称:%s,课程类型:%s,学分:%.1f,上课时间和地点:%s", cc.ID, cc.name, cc.type ? "选修" : "必修",
-                        cc.credits, "待完善");
-                break;
-            case 2:
-                t = teacher_list[result[*u - 1]];
-                sprintf(text, "ID:%d,姓名%s", t.ID, t.name);
-                break;
-        }
-        show_info_win(text);
-        newtRefresh();
-        if (result) {
-            free(result);
-        }
-    } else {
-        newtDrawRootText(0, 0, "无输入 !");
-    }
-    newtRefresh();
-    newtFormDestroy(form);
-}
-
-
 void admin_mode() {
     int p = 1, q = 2, r = 3, s = 4, a = 5, b = 6, *u;
     do {
@@ -265,7 +81,6 @@ void admin_mode() {
         }
     } while (1);
 }
-
 
 
 void login() {
@@ -346,8 +161,8 @@ void admin_lookover() {
     newtRunForm(form);
     char *start_id = newtEntryGetValue(entry1);
     char *end_id = newtEntryGetValue(entry2);
-    uint32_t ustart_id= atoi(start_id);
-    uint32_t uend_id= atoi(end_id);
+    uint32_t ustart_id = atoi(start_id);
+    uint32_t uend_id = atoi(end_id);
 //    char text[32]{};
 //    sprintf(text,"%d",ustart_id);
 //    newtDrawRootText(0,0,text);
@@ -358,6 +173,207 @@ void admin_lookover() {
 
 
     sleep(5);
+}
+
+void admin_querry() {
+    newtComponent form, label1, label2, entry, button, rb[3], rankrule[3], label3;
+    char *entryValue;
+
+    newtCls();
+    //newtCenteredWindow(50, 10, "管理员模式-修改记录");
+
+    newtOpenWindow(100, 5, 50, 40, "查询结果");
+    newtOpenWindow(40, 20, 50, 12, "管理员模式-查询记录");
+    /*left,top 是相对于中心窗口而言 */
+    label1 = newtLabel(10, 1, "请输入查询信息:");
+    entry = newtEntry(25, 1, "小明", 20, (const char **) &entryValue, NEWT_FLAG_SCROLL);
+    newtEntrySet(entry, "\0", 0);
+    button = newtButton(22, 6, "确认");
+    form = newtForm(NULL, NULL, 0);
+
+    label2 = newtLabel(6, 3, "查询类别:");
+    rb[0] = newtRadiobutton(15, 3, "学生", 1, NULL);
+    rb[1] = newtRadiobutton(25, 3, "课程", 0, rb[0]);
+    rb[2] = newtRadiobutton(35, 3, "教师", 0, rb[1]);
+
+    label3 = newtLabel(6, 4, "排序依据:");
+    rankrule[0] = newtRadiobutton(15, 4, "无序", 1, NULL);
+    rankrule[1] = newtRadiobutton(25, 4, "ID升序", 0, rankrule[0]);
+    rankrule[2] = newtRadiobutton(35, 4, "ID降序", 0, rankrule[1]);
+    newtFormAddComponents(form, label1, label2, label3, entry, rb[0], rb[1], rb[2], rankrule[0], rankrule[1],
+                          rankrule[2], button, NULL);
+
+    newtPushHelpLine("< 空格健 > 选择");
+    newtRunForm(form);
+    uint8_t type = 0;
+    uint8_t rank = 0;//是否排序,升序/降序
+    for (int i = 0; i < 3; i++) {
+        if (newtRadioGetCurrent(rb[0]) == rb[i]) {
+            newtDrawRootText(0, 2, "您查询的类别是:");
+            if (i == 0) {
+                newtDrawRootText(16, 2, "学生");
+                type = 0;
+            }
+            if (i == 1) {
+                newtDrawRootText(16, 2, "课程");
+                type = 1;
+            }
+            if (i == 2) {
+                newtDrawRootText(16, 2, "教师");
+                type = 2;
+            }
+        }
+    }
+    for (int i = 0; i < 3; i++) {
+        if (newtRadioGetCurrent(rankrule[0]) == rankrule[i]) {
+            newtDrawRootText(0, 3, "排序依据:");
+            switch (i) {
+                case 1:
+                    newtDrawRootText(9, 3, "ID升序");
+                    break;
+                case 2:
+                    newtDrawRootText(9, 3, "ID降序");
+                    break;
+                default:
+                    newtDrawRootText(9, 3, "无序");
+                    break;
+            }
+            rank = i;
+        }
+    }
+
+    if (*entryValue != '\0') {
+        newtDrawRootText(0, 0, "你查询的字段是:");
+        newtDrawRootText(16, 0, entryValue);
+        uint32_t id = atoi(entryValue);
+        uint32_t *result = NULL;
+        if (id) {
+            switch (type) {
+                case 0:
+                    result = widesearch(id, NULL, student_list, rank);
+                    break;
+                case 1:
+                    result = widesearch(id, NULL, class_list, rank);
+                    break;
+                case 2:
+                    result = widesearch(id, NULL, teacher_list, rank);
+                    break;
+            }
+        } else {
+            switch (type) {
+                case 0:
+                    result = widesearch(0, entryValue, student_list, rank);
+                    break;
+                case 1:
+                    result = widesearch(0, entryValue, class_list, rank);
+                    break;
+                case 2:
+                    result = widesearch(0, entryValue, teacher_list, rank);
+                    break;
+            }
+        }
+        newtPopWindowNoRefresh();
+
+        //渲染结果
+        int current = 1;
+        while (1) {
+            newtComponent list, form2;
+            size_t N;
+            for (N = 0; result[N] != 0; N++);
+            if (N == 0) {
+                free(result);
+                show_warning_win("找不到!");
+                newtRefresh();
+                newtFormDestroy(form);
+                return;
+            }
+            list = newtListbox(1, 2, 16, NEWT_FLAG_RETURNEXIT);
+            form2 = newtForm(NULL, NULL, 0);
+            int *num = (int *) malloc(sizeof(int) * N);
+            memset(num, 0, sizeof(int) * N);
+            for (int i = 0; i < N; i++) {
+                num[i] = i + 1;
+            }
+            int zero_return = 0;
+            newtListboxAppendEntry(list, "退出", &zero_return);
+            char itemtext[64]{};
+            newtListboxSetWidth(list, 40);
+            switch (type) {
+                case 0: {
+                    for (int i = 0; i < N; i++) {
+                        sprintf(itemtext, "ID:%d\t姓名:%s", student_list[result[i]].ID, student_list[result[i]].name);
+                        newtListboxAppendEntry(list, itemtext, num + i);
+                        memset(itemtext, 0, 64);
+                    }
+                    newtFormAddComponent(form2, list);
+                    newtListboxSetCurrent(list, current);
+                    newtRunForm(form2);
+                }
+                    break;
+                case 1: {
+                    for (int i = 0; i < N; i++) {
+                        sprintf(itemtext, "ID:%d\t课程名称:%s(%s)", class_list[result[i]].ID, class_list[result[i]].name,
+                                class_list[result[i]].type ? "选修" : "必修");
+                        newtListboxAppendEntry(list, itemtext, num + i);
+                        memset(itemtext, 0, 64);
+                    }
+                    newtFormAddComponent(form2, list);
+                    newtListboxSetCurrent(list, current);
+                    newtRunForm(form2);
+                }
+
+                    break;
+                case 2: {
+                    for (int i = 0; i < N; i++) {
+                        sprintf(itemtext, "ID:%d\t姓名:%s", teacher_list[result[i]].ID, teacher_list[result[i]].name);
+                        newtListboxAppendEntry(list, itemtext, num + i);
+                        memset(itemtext, 0, 64);
+                    }
+                    newtFormAddComponent(form2, list);
+                    newtListboxSetCurrent(list, current);
+                    newtRunForm(form2);
+                }
+                    break;
+            }
+            int *u = (int *) newtListboxGetCurrent(list);
+            current = *u;
+            if (!*u) { //按下退出
+                if (result) {
+                    free(result);
+                }
+                newtFormDestroy(form2);
+                return;
+            }
+            char text[128] = {0};
+            student_t s;
+            class_t cc;
+            teacher_t t;
+            switch (type) {
+                case 0:
+                    s = student_list[result[*u - 1]];
+                    sprintf(text, "ID:%d,姓名:%s,性别:%lc,年龄:%d,学分%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age, s.credits);
+                    break;
+                case 1:
+                    cc = class_list[result[*u - 1]];
+                    sprintf(text, "ID:%d,课程名称:%s,课程类型:%s,学分:%.1f,上课时间和地点:%s", cc.ID, cc.name, cc.type ? "选修" : "必修",
+                            cc.credits, "待完善");
+                    break;
+                case 2:
+                    t = teacher_list[result[*u - 1]];
+                    sprintf(text, "ID:%d,姓名%s", t.ID, t.name);
+                    break;
+            }
+            show_info_win(text);
+            newtFormDestroy(form2);
+            newtRefresh();
+        }
+
+
+    } else {
+        show_warning_win("无输入");
+    }
+    newtRefresh();
+    newtFormDestroy(form);
 }
 
 void admin_modify() {
@@ -426,6 +442,7 @@ void admin_modify() {
             rank = i;
         }
     }
+
     if (*entryValue != '\0') {
         newtDrawRootText(0, 0, "你查询的字段是:");
         newtDrawRootText(16, 0, entryValue);
@@ -458,86 +475,103 @@ void admin_modify() {
         }
         newtPopWindowNoRefresh();
 
-        newtComponent list, form2;
-        size_t N;
-        for (N = 0; result[N] != 0; N++);
-        if (N == 0) {
-            free(result);
-            show_warning_win("找不到!");
-            newtRefresh();
-            newtFormDestroy(form);
-            return;
-        }
-        list = newtListbox(1, 2, N, NEWT_FLAG_RETURNEXIT);
-        form2 = newtForm(NULL, NULL, 0);
-        int *num = (int *) malloc(sizeof(int) * N);
-        memset(num, 0, sizeof(int) * N);
-        for (int i = 0; i < N; i++) {
-            num[i] = i + 1;
-        }
-        char itemtext[64]{};
-        newtListboxSetWidth(list, 40);
-        switch (type) {
-            case 0: {
-                for (int i = 0; i < N; i++) {
-                    sprintf(itemtext, "ID:%d\t姓名:%s", student_list[result[i]].ID, student_list[result[i]].name);
-                    newtListboxAppendEntry(list, itemtext, num + i);
-                    memset(itemtext, 0, 64);
-                }
-                newtFormAddComponent(form2, list);
-                newtRunForm(form2);
+        //渲染结果
+        int current = 1;
+        while (1) {
+            newtComponent list, form2;
+            size_t N;
+            for (N = 0; result[N] != 0; N++);
+            if (N == 0) {
+                free(result);
+                show_warning_win("找不到!");
+                newtRefresh();
+                newtFormDestroy(form);
+                return;
             }
-                break;
-            case 1: {
-                for (int i = 0; i < N; i++) {
-                    sprintf(itemtext, "ID:%d\t课程名称:%s(%s)", class_list[result[i]].ID, class_list[result[i]].name,
-                            class_list[result[i]].type ? "选修" : "必修");
-                    newtListboxAppendEntry(list, itemtext, num + i);
-                    memset(itemtext, 0, 64);
-                }
-                newtFormAddComponent(form2, list);
-                newtRunForm(form2);
+            list = newtListbox(1, 2, 16, NEWT_FLAG_RETURNEXIT);
+            form2 = newtForm(NULL, NULL, 0);
+            int *num = (int *) malloc(sizeof(int) * N);
+            memset(num, 0, sizeof(int) * N);
+            for (int i = 0; i < N; i++) {
+                num[i] = i + 1;
             }
+            int zero_return = 0;
+            newtListboxAppendEntry(list, "退出", &zero_return);
+            char itemtext[64]{};
+            newtListboxSetWidth(list, 40);
+            switch (type) {
+                case 0: {
+                    for (int i = 0; i < N; i++) {
+                        sprintf(itemtext, "ID:%d\t姓名:%s", student_list[result[i]].ID, student_list[result[i]].name);
+                        newtListboxAppendEntry(list, itemtext, num + i);
+                        memset(itemtext, 0, 64);
+                    }
+                    newtFormAddComponent(form2, list);
+                    newtListboxSetCurrent(list, current);
+                    newtRunForm(form2);
+                }
+                    break;
+                case 1: {
+                    for (int i = 0; i < N; i++) {
+                        sprintf(itemtext, "ID:%d\t课程名称:%s(%s)", class_list[result[i]].ID, class_list[result[i]].name,
+                                class_list[result[i]].type ? "选修" : "必修");
+                        newtListboxAppendEntry(list, itemtext, num + i);
+                        memset(itemtext, 0, 64);
+                    }
+                    newtFormAddComponent(form2, list);
+                    newtListboxSetCurrent(list, current);
+                    newtRunForm(form2);
+                }
 
-                break;
-            case 2: {
-                for (int i = 0; i < N; i++) {
-                    sprintf(itemtext, "ID:%d\t姓名:%s", teacher_list[result[i]].ID, teacher_list[result[i]].name);
-                    newtListboxAppendEntry(list, itemtext, num + i);
-                    memset(itemtext, 0, 64);
+                    break;
+                case 2: {
+                    for (int i = 0; i < N; i++) {
+                        sprintf(itemtext, "ID:%d\t姓名:%s", teacher_list[result[i]].ID, teacher_list[result[i]].name);
+                        newtListboxAppendEntry(list, itemtext, num + i);
+                        memset(itemtext, 0, 64);
+                    }
+                    newtFormAddComponent(form2, list);
+                    newtListboxSetCurrent(list, current);
+                    newtRunForm(form2);
                 }
-                newtFormAddComponent(form2, list);
-                newtRunForm(form2);
+                    break;
             }
-                break;
+            int *u = (int *) newtListboxGetCurrent(list);
+            current = *u;
+            if (!*u) { //按下退出
+                if (result) {
+                    free(result);
+                }
+                newtFormDestroy(form2);
+                return;
+            }
+            char text[128] = {0};
+            student_t s;
+            class_t cc;
+            teacher_t t;
+            switch (type) {
+                case 0:
+                    s = student_list[result[*u - 1]];
+                    sprintf(text, "ID:%d,姓名:%s,性别:%lc,年龄:%d,学分%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age, s.credits);
+                    break;
+                case 1:
+                    cc = class_list[result[*u - 1]];
+                    sprintf(text, "ID:%d,课程名称:%s,课程类型:%s,学分:%.1f,上课时间和地点:%s", cc.ID, cc.name, cc.type ? "选修" : "必修",
+                            cc.credits, "待完善");
+                    break;
+                case 2:
+                    t = teacher_list[result[*u - 1]];
+                    sprintf(text, "ID:%d,姓名%s", t.ID, t.name);
+                    break;
+            }
+            show_info_win(text);
+            newtFormDestroy(form2);
+            newtRefresh();
         }
-        int *u = (int *) newtListboxGetCurrent(list);
-        char text[128] = {0};
-        student_t s;
-        class_t cc;
-        teacher_t t;
-        switch (type) {
-            case 0:
-                s = student_list[result[*u - 1]];
-                sprintf(text, "ID:%d,姓名:%s,性别:%lc,年龄:%d,学分%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age, s.credits);
-                break;
-            case 1:
-                cc = class_list[result[*u - 1]];
-                sprintf(text, "ID:%d,课程名称:%s,课程类型:%s,学分:%.1f,上课时间和地点:%s", cc.ID, cc.name, cc.type ? "选修" : "必修",
-                        cc.credits, "待完善");
-                break;
-            case 2:
-                t = teacher_list[result[*u - 1]];
-                sprintf(text, "ID:%d,姓名%s", t.ID, t.name);
-                break;
-        }
-        show_info_win(text);
-        newtRefresh();
-        if (result) {
-            free(result);
-        }
+
+
     } else {
-        newtDrawRootText(0, 0, "无输入 !");
+        show_warning_win("无输入");
     }
     newtRefresh();
     newtFormDestroy(form);
@@ -613,7 +647,6 @@ int main() {
 #endif
     return 0;
 }
-
 
 
 #pragma clang diagnostic pop
