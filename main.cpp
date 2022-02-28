@@ -393,24 +393,38 @@ void admin_lookover() {
     newtCls();
     newtCenteredWindow(50, 12, "管理员模式-浏览");
     newtRefresh();
-    newtComponent form,label1, label2,label3, entry1, entry2, button, rb[3];
-    char *start_ID;
-    char *end_ID;
+    newtComponent form, label1, label2, label3, entry1, entry2, button, rb[3];
+    char *estart_ID;
+    char *eend_ID;
     rb[0] = newtRadiobutton(12, 2, "学生", 1, NULL);
     rb[1] = newtRadiobutton(22, 2, "课程", 0, rb[0]);
     rb[2] = newtRadiobutton(32, 2, "教师", 0, rb[1]);
 
-    label1= newtLabel(2,2,"检索类别:");
-    label2= newtLabel(2,4,"起始ID:");
-    label3= newtLabel(2,6,"结束ID:");
+    label1 = newtLabel(2, 2, "检索类别:");
+    label2 = newtLabel(2, 4, "起始ID:");
+    label3 = newtLabel(2, 6, "结束ID:");
 
-    entry1= newtEntry(10,4,"",30,(const char**)&start_ID,NEWT_FLAG_SCROLL);
-    entry2= newtEntry(10,6,"",30,(const char**)&end_ID,NEWT_FLAG_SCROLL);
-    button= newtButton(22,8,"浏览");
-    form= newtForm(NULL,NULL,0);
-
-    newtFormAddComponents(form,label1, label2,label3,rb[0],rb[1],rb[2],entry1, entry2,button,NULL);
+    entry1 = newtEntry(10, 4, "", 30, (const char **) &estart_ID, NEWT_FLAG_SCROLL);
+    entry2 = newtEntry(10, 6, "", 30, (const char **) &eend_ID, NEWT_FLAG_SCROLL);
+    newtEntrySet(entry1, "\0", 0);
+    newtEntrySet(entry2, "\0", 0);
+    button = newtButton(22, 8, "浏览");
+    form = newtForm(NULL, NULL, 0);
+    newtFormAddComponents(form, label1, label2, label3, rb[0], rb[1], rb[2], entry1, entry2, button, NULL);
     newtRunForm(form);
+    char *start_id = newtEntryGetValue(entry1);
+    char *end_id = newtEntryGetValue(entry2);
+    uint32_t ustart_id= atoi(start_id);
+    uint32_t uend_id= atoi(end_id);
+//    char text[32]{};
+//    sprintf(text,"%d",ustart_id);
+//    newtDrawRootText(0,0,text);
+//    newtRefresh();
+//开始做列表的渲染,默认是升序的
+    newtFormDestroy(form);
+    newtRefresh();
+
+
     sleep(5);
 }
 
