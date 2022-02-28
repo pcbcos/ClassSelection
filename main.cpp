@@ -40,7 +40,6 @@ void student_mode() {
 }
 
 
-
 void admin_querry() {
     newtComponent form, label1, label2, entry, button, rb[3], rankrule[3], label3;
     char *entryValue;
@@ -117,25 +116,25 @@ void admin_querry() {
         if (id) {
             switch (type) {
                 case 0:
-                    result = widesearch(id, NULL, student_list);
+                    result = widesearch(id, NULL, student_list, rank);
                     break;
                 case 1:
-                    result = widesearch(id, NULL, class_list);
+                    result = widesearch(id, NULL, class_list, rank);
                     break;
                 case 2:
-                    result = widesearch(id, NULL, teacher_list);
+                    result = widesearch(id, NULL, teacher_list, rank);
                     break;
             }
         } else {
             switch (type) {
                 case 0:
-                    result = widesearch(0, entryValue, student_list);
+                    result = widesearch(0, entryValue, student_list, rank);
                     break;
                 case 1:
-                    result = widesearch(0, entryValue, class_list);
+                    result = widesearch(0, entryValue, class_list, rank);
                     break;
                 case 2:
-                    result = widesearch(0, entryValue, teacher_list);
+                    result = widesearch(0, entryValue, teacher_list, rank);
                     break;
             }
         }
@@ -151,7 +150,7 @@ void admin_querry() {
             newtFormDestroy(form);
             return;
         }
-        list = newtListbox(2, 2, N, NEWT_FLAG_RETURNEXIT);
+        list = newtListbox(1, 2, N, NEWT_FLAG_RETURNEXIT);
         form2 = newtForm(NULL, NULL, 0);
         int *num = (int *) malloc(sizeof(int) * N);
         memset(num, 0, sizeof(int) * N);
@@ -159,15 +158,13 @@ void admin_querry() {
             num[i] = i + 1;
         }
         //做排序
-        if(!rank){
 
-        }
 
 
         //排序做完了
 
         char itemtext[64]{};
-
+        newtListboxSetWidth(list,32);
         switch (type) {
             case 0: {
                 for (int i = 0; i < N; i++) {

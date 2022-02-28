@@ -422,13 +422,8 @@ void show_info_win(char *text) {
     newtWinMessage("信息", "确定", text);
 }
 
-__compar_fn_t ID_UP(const void* e1,const void* e2){
 
-}
 
-__compar_fn_t ID_DOWM(){
-
-}
 
 
 #pragma clang diagnostic pop

@@ -12,6 +12,7 @@
 #include "curses.h"
 #include "cstring"
 #include "newt.h"
+#include "algorithm"
 
 #define MAX_CLASS_NUM 500
 #define MAX_STUDENT_NUM 10000
@@ -144,9 +145,6 @@ void read_class_data();
 
 void read_resource_data();
 
-__compar_fn_t ID_UP();
-__compar_fn_t ID_DOWM();
-
 
 uint32_t hashID(uint32_t ID, uint64_t max);
 
@@ -154,19 +152,6 @@ uint32_t hashID(uint32_t ID, uint64_t max);
 uint32_t get_min_available_ID(const uint32_t *index_list, uint32_t max_num);//自动找一个ID,利用了堆区数组自动零初始化的性质
 
 template<typename T, std::size_t N>
-//uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N], const uint32_t *index_list) {
-//    uint32_t hID = ID;
-//    uint8_t hash_count = 0;
-//    do {
-//        hID = hashID(hID, N);//取哈希作为索引
-//        hash_count++;
-//    } while (hash_count < MAX_HASH_TIME && entity_list[index_list[hID]].ID != ID);
-//    if (entity_list[index_list[hID]].ID == ID) {
-//        return index_list[hID];
-//    } else {
-//        return 0;
-//    }
-//}
 uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N]) {
     uint32_t hID = ID;
     uint8_t hash_count = 0;
@@ -181,12 +166,26 @@ uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N]) {
     }
 }
 
+//template<typename T, T* entity_list>
+//int ID_UP(const void *e1, const void *e2) {
+//    T t1 = entity_list[*(uint32_t *) e1];
+//    T t2 = entity_list[*(uint32_t *) e2];
+//    return t1.ID - t2.ID;
+//};
+//
+//template<typename T, T* entity_list>
+//int ID_DOWN(const void *e1, const void *e2) {
+//    T t1 = entity_list[*(uint32_t *) e1];
+//    T t2 = entity_list[*(uint32_t *) e2];
+//    return t2.ID - t1.ID;
+//};
+
 template<typename T, std::size_t N>
-uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N],const uint8_t& rank) {
+uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N], const uint8_t &rank = 0) {
     uint32_t i = 0;
     uint32_t m = 32;
     auto *result = (uint32_t *) malloc(32 * 4);
-    memset(result, 0, 32*sizeof(uint32_t));
+    memset(result, 0, 32 * sizeof(uint32_t));
     if (ID) {
         uint32_t index = get_index_by_ID(ID, entity_list);
         result[i++] = index;
@@ -197,11 +196,27 @@ uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N],con
                 result[i++] = index;
                 if (i == m) {
                     result = (uint32_t *) realloc(result, (m + 32) * 4);
-                    memset(result + m, 0, 32*sizeof(uint32_t));
+                    memset(result + m, 0, 32 * sizeof(uint32_t));
                     m += 32;
                 }
             }
         }
+    }
+
+    switch (rank) {
+        case 1:
+            std::sort(result, result + i, [&](uint32_t e1, uint32_t e2) {
+                return entity_list[e1].ID < entity_list[e2].ID;
+            });
+            break;
+        case 2:
+            std::sort(result, result + i, [&](uint32_t e1, uint32_t e2) {
+                return entity_list[e1].ID > entity_list[e2].ID;
+            });
+            break;
+        default:
+            break;
+
     }
     return result;
 }
