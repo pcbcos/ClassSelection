@@ -267,74 +267,6 @@ void admin_mode() {
 }
 
 
-int main() {
-    read_student_data();
-    read_class_data();
-    read_resource_data();
-    read_teacher_data();
-
-#if TEST_MENU
-    newtInit();
-    login();
-    newtComponent list, fm;
-    int p = 1, q = 2, r = 3, s = 4, t = 5, *u;
-    do {
-        newtCls();
-        newtRefresh();
-        newtDrawRootText(100, 0, "这是我的学生选课系统");
-        newtCenteredWindow(50, 10, "请选择");
-        list = newtListbox(18, 3, 5, NEWT_FLAG_RETURNEXIT);
-        newtListboxAppendEntry(list, "学生模式", &p);
-        newtListboxAppendEntry(list, "管理员模式", &q);
-        newtListboxAppendEntry(list, "退出系统", &s);
-        newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
-        fm = newtForm(NULL, NULL, 0);
-        newtFormAddComponents(fm, list, NULL);
-        newtRunForm(fm);
-        u = (int *) newtListboxGetCurrent(list);
-        newtPopWindow();
-        newtFormDestroy(fm);
-        switch (*u) {
-            case 1:
-                student_mode();
-                break;
-            case 2:
-                admin_mode();
-                break;
-            case 4:
-                newtFinished();
-                printf("ID=%d\n", ID);
-                exit(0);
-        }
-    } while (1);
-#else
-
-    //    for (auto &s: student_list) {
-    //        if (s.ID) {
-    //            printf("NAME=%s,ID=%d\n", s.name, s.ID);
-    //        }
-    //    }
-    //    for (uint32_t index = 1; index < MAX_STUDENT_NUM; index++) {
-    //        if (strcmp("翁湛阳", student_list[index].name) == 0) {
-    //            printf("index=%d",index);
-    //            break;
-    //        }
-    //    }
-    //    uint32_t* r=widesearch(0, "测试", resource_list);
-    //
-    //    for (int i = 0; i < 32; i++) {
-    //        resource_t s = resource_list[r[i]];
-    //        printf("name=%s\tID=%d\n", s.name, s.ID);
-    //    }
-        for (auto &r: teacher_list) {
-            if(r.ID)
-            printf("name=%s\tID=%d\n", r.name, r.ID);
-        }
-
-
-#endif
-    return 0;
-}
 
 void login() {
     //newtInit();
@@ -612,6 +544,76 @@ void admin_modify() {
 }
 
 void admin_addclass() { ; }
+
+int main() {
+    read_student_data();
+    read_class_data();
+    read_resource_data();
+    read_teacher_data();
+
+#if TEST_MENU
+    newtInit();
+    login();
+    newtComponent list, fm;
+    int p = 1, q = 2, r = 3, s = 4, t = 5, *u;
+    do {
+        newtCls();
+        newtRefresh();
+        newtDrawRootText(100, 0, "这是我的学生选课系统");
+        newtCenteredWindow(50, 10, "请选择");
+        list = newtListbox(18, 3, 5, NEWT_FLAG_RETURNEXIT);
+        newtListboxAppendEntry(list, "学生模式", &p);
+        newtListboxAppendEntry(list, "管理员模式", &q);
+        newtListboxAppendEntry(list, "退出系统", &s);
+        newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
+        fm = newtForm(NULL, NULL, 0);
+        newtFormAddComponents(fm, list, NULL);
+        newtRunForm(fm);
+        u = (int *) newtListboxGetCurrent(list);
+        newtPopWindow();
+        newtFormDestroy(fm);
+        switch (*u) {
+            case 1:
+                student_mode();
+                break;
+            case 2:
+                admin_mode();
+                break;
+            case 4:
+                newtFinished();
+                printf("ID=%d\n", ID);
+                exit(0);
+        }
+    } while (1);
+#else
+
+    //    for (auto &s: student_list) {
+    //        if (s.ID) {
+    //            printf("NAME=%s,ID=%d\n", s.name, s.ID);
+    //        }
+    //    }
+    //    for (uint32_t index = 1; index < MAX_STUDENT_NUM; index++) {
+    //        if (strcmp("翁湛阳", student_list[index].name) == 0) {
+    //            printf("index=%d",index);
+    //            break;
+    //        }
+    //    }
+    //    uint32_t* r=widesearch(0, "测试", resource_list);
+    //
+    //    for (int i = 0; i < 32; i++) {
+    //        resource_t s = resource_list[r[i]];
+    //        printf("name=%s\tID=%d\n", s.name, s.ID);
+    //    }
+        for (auto &r: teacher_list) {
+            if(r.ID)
+            printf("name=%s\tID=%d\n", r.name, r.ID);
+        }
+
+
+#endif
+    return 0;
+}
+
 
 
 #pragma clang diagnostic pop
