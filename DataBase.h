@@ -144,6 +144,9 @@ void read_class_data();
 
 void read_resource_data();
 
+__compar_fn_t ID_UP();
+__compar_fn_t ID_DOWM();
+
 
 uint32_t hashID(uint32_t ID, uint64_t max);
 
@@ -179,7 +182,7 @@ uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N]) {
 }
 
 template<typename T, std::size_t N>
-uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N]) {
+uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N],const uint8_t& rank) {
     uint32_t i = 0;
     uint32_t m = 32;
     auto *result = (uint32_t *) malloc(32 * 4);

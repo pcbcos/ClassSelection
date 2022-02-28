@@ -40,30 +40,39 @@ void student_mode() {
 }
 
 
+
 void admin_querry() {
-    newtComponent form, label1, label2, entry, button, rb[3];
+    newtComponent form, label1, label2, entry, button, rb[3], rankrule[3], label3;
     char *entryValue;
 
     newtCls();
     //newtCenteredWindow(50, 10, "管理员模式-修改记录");
 
     newtOpenWindow(100, 5, 50, 40, "查询结果");
-    newtOpenWindow(40, 20, 50, 10, "管理员模式-查询记录");
+    newtOpenWindow(40, 20, 50, 12, "管理员模式-查询记录");
     /*left,top 是相对于中心窗口而言 */
     label1 = newtLabel(10, 1, "请输入查询信息:");
     entry = newtEntry(25, 1, "小明", 20, (const char **) &entryValue, NEWT_FLAG_SCROLL);
     newtEntrySet(entry, "\0", 0);
-    button = newtButton(22, 5, "确认");
+    button = newtButton(22, 6, "确认");
     form = newtForm(NULL, NULL, 0);
 
-    label2 = newtLabel(5, 3, "查询类别:");
-    rb[0] = newtRadiobutton(10, 3, "学生", 1, NULL);
-    rb[1] = newtRadiobutton(20, 3, "课程", 0, rb[0]);
-    rb[2] = newtRadiobutton(30, 3, "教师", 0, rb[1]);
-    newtFormAddComponents(form, label1, label2, entry, rb[0], rb[1], rb[2], button, NULL);
+    label2 = newtLabel(6, 3, "查询类别:");
+    rb[0] = newtRadiobutton(15, 3, "学生", 1, NULL);
+    rb[1] = newtRadiobutton(25, 3, "课程", 0, rb[0]);
+    rb[2] = newtRadiobutton(35, 3, "教师", 0, rb[1]);
+
+    label3 = newtLabel(6, 4, "排序依据:");
+    rankrule[0] = newtRadiobutton(15, 4, "无序", 1, NULL);
+    rankrule[1] = newtRadiobutton(25, 4, "ID升序", 0, rankrule[0]);
+    rankrule[2] = newtRadiobutton(35, 4, "ID降序", 0, rankrule[1]);
+    newtFormAddComponents(form, label1, label2, label3, entry, rb[0], rb[1], rb[2], rankrule[0], rankrule[1],
+                          rankrule[2], button, NULL);
+
     newtPushHelpLine("< 空格健 > 选择");
     newtRunForm(form);
     uint8_t type = 0;
+    uint8_t rank = 0;//是否排序,升序/降序
     for (int i = 0; i < 3; i++) {
         if (newtRadioGetCurrent(rb[0]) == rb[i]) {
             newtDrawRootText(0, 2, "您查询的类别是:");
@@ -81,6 +90,24 @@ void admin_querry() {
             }
         }
     }
+    for (int i = 0; i < 3; i++) {
+        if (newtRadioGetCurrent(rankrule[0]) == rankrule[i]) {
+            newtDrawRootText(0, 3, "排序依据:");
+            switch (i) {
+                case 1:
+                    newtDrawRootText(9, 3, "ID升序");
+                    break;
+                case 2:
+                    newtDrawRootText(9, 3, "ID降序");
+                    break;
+                default:
+                    newtDrawRootText(9, 3, "无序");
+                    break;
+            }
+            rank = i;
+        }
+    }
+
     if (*entryValue != '\0') {
         newtDrawRootText(0, 0, "你查询的字段是:");
         newtDrawRootText(16, 0, entryValue);
@@ -131,10 +158,22 @@ void admin_querry() {
         for (int i = 0; i < N; i++) {
             num[i] = i + 1;
         }
+        //做排序
+        if(!rank){
+
+        }
+
+
+        //排序做完了
+
+        char itemtext[64]{};
+
         switch (type) {
             case 0: {
                 for (int i = 0; i < N; i++) {
-                    newtListboxAppendEntry(list, student_list[result[i]].name, num + i);
+                    sprintf(itemtext, "ID:%d\t姓名:%s", student_list[result[i]].ID, student_list[result[i]].name);
+                    newtListboxAppendEntry(list, itemtext, num + i);
+                    memset(itemtext, 0, 64);
                 }
                 newtFormAddComponent(form2, list);
                 newtRunForm(form2);
@@ -142,7 +181,9 @@ void admin_querry() {
                 break;
             case 1: {
                 for (int i = 0; i < N; i++) {
-                    newtListboxAppendEntry(list, class_list[result[i]].name, num + i);
+                    sprintf(itemtext, "ID:%d\t课程名称:%s", class_list[result[i]].ID, class_list[result[i]].name);
+                    newtListboxAppendEntry(list, itemtext, num + i);
+                    memset(itemtext, 0, 64);
                 }
                 newtFormAddComponent(form2, list);
                 newtRunForm(form2);
@@ -151,7 +192,9 @@ void admin_querry() {
                 break;
             case 2: {
                 for (int i = 0; i < N; i++) {
-                    newtListboxAppendEntry(list, teacher_list[result[i]].name, num + i);
+                    sprintf(itemtext, "ID:%d\t姓名:%s", teacher_list[result[i]].ID, teacher_list[result[i]].name);
+                    newtListboxAppendEntry(list, itemtext, num + i);
+                    memset(itemtext, 0, 64);
                 }
                 newtFormAddComponent(form2, list);
                 newtRunForm(form2);
@@ -162,10 +205,6 @@ void admin_querry() {
         }
 
         int *u = (int *) newtListboxGetCurrent(list);
-//        newtDrawRootText(0, 0, "                      ");
-//
-//        newtDrawRootText(0, 0, "你选中了:");
-//        newtDrawRootText(9, 0, student_list[result[(*u) - 1]].name);
         char text[128] = {0};
         student_t s;
         class_t cc;
@@ -185,9 +224,6 @@ void admin_querry() {
                 sprintf(text, "ID:%d,姓名%s", t.ID, t.name);
                 break;
         }
-//        wchar_t sex = s.sex ? L'女' : L'男';
-//        sprintf(text, "姓名:%s\n学号:%d\n性别:%lc\n已获得学分:%d\n", s.name, s.ID, sex, s.credits);
-//        sprintf(text, "ID=%d 姓名=%s 性别=%lc ")
         show_warning_win(text);
         newtRefresh();
 
