@@ -282,20 +282,20 @@ auto get_T_head(T e) {
     }
 }
 
-template<typename T>
+template<typename T,std::size_t N>
 requires std::is_same_v<T, resource_t>
-void addRelation(uint32_t class_id, uint32_t other_id) {
+void addRelation(uint32_t class_id, uint32_t other_id,T(&entity_list)[N]) {
     class_t c = class_list[get_index_by_ID(class_id, class_list)];
-    T e = get_T_list<T>()[get_index_by_ID(other_id, get_T_list<T>())];
+    T e = entity_list[get_index_by_ID(other_id, entity_list)];
     auto class_xxx_link_head = get_T_head<T>(c);
     list_append(class_xxx_link_head, other_id);
 }
 
-template<typename T>
+template<typename T,std::size_t N>
 requires  have_relation_with_class<T> && (!std::is_same_v<T, resource_t>)
-void addRelation(uint32_t class_id, uint32_t other_id) {
+void addRelation(uint32_t class_id, uint32_t other_id,T(&entity_list)[N]) {
     class_t c = class_list[get_index_by_ID(class_id, class_list)];
-    T e = get_T_list<T>()[get_index_by_ID(other_id, get_T_list<T>())];
+    T e = entity_list[get_index_by_ID(other_id, entity_list)];
     auto class_xxx_link_head = get_T_head<T>(c);
     auto xxx_class_link_head = get_T_head(e);
     list_append(class_xxx_link_head, other_id);

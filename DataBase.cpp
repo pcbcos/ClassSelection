@@ -437,18 +437,26 @@ void read_relation() {
         if (T1 == 'c') {
             switch (T2) {
                 case 's':
-                    addRelation<student_t>(ID1,ID2);
+                    addRelation<student_t>(ID1,ID2,student_list);
                     break;
                 case 't':
-                    addRelation<teacher_t>(ID1,ID2);
+                    addRelation<teacher_t>(ID1,ID2,teacher_list);
                     break;
                 case 'r':
-                    addRelation<resource_t>(ID1,ID2);
+                    addRelation<resource_t>(ID1,ID2,resource_list);
                     break;
             }
         } else {
             switch (T1) {
-                
+                case 's':
+                    addRelation<student_t>(ID2,ID1,student_list);
+                    break;
+                case 't':
+                    addRelation<teacher_t>(ID2,ID1,teacher_list);
+                    break;
+                case 'r':
+                    addRelation<resource_t>(ID2,ID1,resource_list);
+                    break;
             }
         }
         T1 = 0;
