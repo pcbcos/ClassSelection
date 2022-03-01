@@ -423,7 +423,7 @@ void show_info_win(char *text) {
 }
 
 void read_relation() {
-    FILE *fp = fopen("relations.txt", "r");
+    FILE *fp = fopen("../test_data_gen/relations.txt", "r");
     char buff[64]{};
     char T1{};
     char T2{};

@@ -671,7 +671,7 @@ int main() {
     read_class_data();
     read_resource_data();
     read_teacher_data();
-
+read_relation();
 #if TEST_MENU
     newtInit();
     newtSetSuspendCallback(callback, NULL);
@@ -708,12 +708,14 @@ int main() {
         }
     } while (1);
 #else
-    for (auto &r: resource_list) {
-        if (r.ID) {
-            printf("ID:%d,周%d第%d节,教室:%s\n",r.ID,r.day,r.rank,r.name);
-        }
+//    for (auto &r: resource_list) {
+//        if (r.ID) {
+//            printf("ID:%d,周%d第%d节,教室:%s\n",r.ID,r.day,r.rank,r.name);
+//        }
+//    }
+student_t s= student_list[get_index_by_ID(19201022,student_list)];
 
-    }
+    printf("%d", list_at(student_list[get_index_by_ID(19201022,student_list)].student_class_link_head,1));
 #endif
     return 0;
 }
