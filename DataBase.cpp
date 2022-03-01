@@ -269,7 +269,7 @@ void read_student_data() {
     fread(&student_num, sizeof(student_num), 1, fp);//读取数量
     for (int i = 0; i < student_num; i++) {
         fread(&temp, sizeof(temp), 1, fp);
-        temp.student_class_link_head = NULL; //设为空指针
+        temp.student_class_link_head = list_create(0); //设为空指针
         uint32_t hID = temp.ID;
         uint8_t hash_count = 0;
         do {
@@ -294,7 +294,7 @@ void read_teacher_data() {
     fread(&teacher_num, sizeof(teacher_num), 1, fp);//读取数量
     for (int i = 0; i < teacher_num; i++) {
         fread(&temp, sizeof(temp), 1, fp);
-        temp.teacher_class_link_head = NULL; //设为空指针
+        temp.teacher_class_link_head = list_create(0); //设为空指针
         uint32_t hID = temp.ID;
         uint8_t hash_count = 0;
         do {
@@ -321,9 +321,9 @@ void read_class_data() {
     fread(&class_num, sizeof(class_num), 1, fp);//读取数量
     for (int i = 0; i < class_num; i++) {
         fread(&temp, sizeof(temp), 1, fp);
-        temp.class_resource_link_head = NULL; //设为空指针
-        temp.class_teacher_link_head = NULL;
-        temp.class_student_link_head = NULL;
+        temp.class_resource_link_head = list_create(0); //设为空指针
+        temp.class_teacher_link_head = list_create(0);
+        temp.class_student_link_head = list_create(0);
         uint32_t hID = temp.ID;
         uint8_t hash_count = 0;
         do {
@@ -392,7 +392,7 @@ void DataBaseInit() {
     read_resource_data();
 
     //从磁盘中读入关系 TODO:实现以下函数
-
+    read_relation();
 
 }
 
@@ -422,8 +422,43 @@ void show_info_win(char *text) {
     newtWinMessage("信息", "确定", text);
 }
 
-
-
+void read_relation() {
+    FILE *fp = fopen("relations.txt", "r");
+    char buff[64]{};
+    char T1{};
+    char T2{};
+    uint32_t ID1;
+    uint32_t ID2;
+    while (fgets(buff, 64, fp)) {
+        sscanf(buff, "%c%c:%d-%d", &T1, &T2, &ID1, &ID2);
+        if (T1 == 'c' && T2 == 'c') {
+            continue;
+        }
+        if (T1 == 'c') {
+            switch (T2) {
+                case 's':
+                    addRelation<student_t>(ID1,ID2);
+                    break;
+                case 't':
+                    addRelation<teacher_t>(ID1,ID2);
+                    break;
+                case 'r':
+                    addRelation<resource_t>(ID1,ID2);
+                    break;
+            }
+        } else {
+            switch (T1) {
+                
+            }
+        }
+        T1 = 0;
+        T2 = 0;
+        ID1 = 0;
+        ID2 = 0;
+        memset(buff, 0, 64);
+    }
+    fclose(fp);
+}
 
 
 #pragma clang diagnostic pop

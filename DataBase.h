@@ -147,6 +147,8 @@ void read_class_data();
 
 void read_resource_data();
 
+void read_relation();
+
 uint32_t hashID(uint32_t ID, uint64_t max);
 
 uint32_t get_min_available_ID(const uint32_t *index_list, uint32_t max_num);//自动找一个ID,利用了堆区数组自动零初始化的性质
@@ -241,5 +243,63 @@ uint32_t get_min_ID(T(&entity_list)[N]) {
     })->ID;
 }
 
+template<typename T>
+constexpr decltype(auto) get_T_list() noexcept {
+    if constexpr(std::is_same_v<T, class_t>) {
+        return class_list;
+    } else if constexpr(std::is_same_v<T, teacher_t>) {
+        return teacher_list;
+    } else if constexpr(std::is_same_v<T, student_t>) {
+        return student_list;
+    } else {
+        return resource_list;
+    }
+}
+
+template<typename T>
+concept have_relation_with_class = std::is_same_v<T, student_t> || std::is_same_v<T, resource_t> ||
+                                   std::is_same_v<T, teacher_t>;
+
+template<typename T>
+requires have_relation_with_class<T>
+auto get_T_head(class_t c) {
+    if constexpr(std::is_same_v<T, student_t>) {
+        return c.class_student_link_head;
+    } else if constexpr(std::is_same_v<T, resource_t>) {
+        return c.class_resource_link_head;
+    } else if constexpr(std::is_same_v<T, teacher_t>) {
+        return c.class_teacher_link_head;
+    }
+}
+
+template<typename T>
+requires std::is_same_v<T, student_t> || std::is_same_v<T, teacher_t>
+auto get_T_head(T e) {
+    if constexpr(std::is_same_v<T, student_t>) {
+        return e.student_class_link_head;
+    } else if constexpr(std::is_same_v<T, teacher_t>) {
+        return e.teacher_class_link_head;
+    }
+}
+
+template<typename T>
+requires std::is_same_v<T, resource_t>
+void addRelation(uint32_t class_id, uint32_t other_id) {
+    class_t c = class_list[get_index_by_ID(class_id, class_list)];
+    T e = get_T_list<T>()[get_index_by_ID(other_id, get_T_list<T>())];
+    auto class_xxx_link_head = get_T_head<T>(c);
+    list_append(class_xxx_link_head, other_id);
+}
+
+template<typename T>
+requires  have_relation_with_class<T> && (!std::is_same_v<T, resource_t>)
+void addRelation(uint32_t class_id, uint32_t other_id) {
+    class_t c = class_list[get_index_by_ID(class_id, class_list)];
+    T e = get_T_list<T>()[get_index_by_ID(other_id, get_T_list<T>())];
+    auto class_xxx_link_head = get_T_head<T>(c);
+    auto xxx_class_link_head = get_T_head(e);
+    list_append(class_xxx_link_head, other_id);
+    list_append(xxx_class_link_head, class_id);
+}
 
 #endif //CLASSSELECTION_DATABASE_H

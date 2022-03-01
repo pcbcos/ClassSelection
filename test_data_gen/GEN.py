@@ -30,6 +30,8 @@ class MyProvider(BaseProvider):
         name = "测试课程_" + str(ID)
         type_ = random.randint(0, 1)
         credits_ = random.randint(1, 10) * 0.5
+        if type_==1:
+            credits_=2.0
         max_stu = random.randint(3, 10) * 10  # 3到100人
         now_stu = random.randint(0, max_stu)
 

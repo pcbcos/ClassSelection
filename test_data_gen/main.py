@@ -6,7 +6,7 @@ from ctypes import *
 student_num = 512
 class_num = 8
 teacher_num = 50
-resource_num = 16
+resource_num = 20
 
 
 class student_t(Structure):

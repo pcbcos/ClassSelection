@@ -708,31 +708,12 @@ int main() {
         }
     } while (1);
 #else
+    for (auto &r: resource_list) {
+        if (r.ID) {
+            printf("ID:%d,周%d第%d节,教室:%s\n",r.ID,r.day,r.rank,r.name);
+        }
 
-    //    for (auto &s: student_list) {
-    //        if (s.ID) {
-    //            printf("NAME=%s,ID=%d\n", s.name, s.ID);
-    //        }
-    //    }
-    //    for (uint32_t index = 1; index < MAX_STUDENT_NUM; index++) {
-    //        if (strcmp("翁湛阳", student_list[index].name) == 0) {
-    //            printf("index=%d",index);
-    //            break;
-    //        }
-    //    }
-    //    uint32_t* r=widesearch(0, "测试", resource_list);
-    //
-    //    for (int i = 0; i < 32; i++) {
-    //        resource_t s = resource_list[r[i]];
-    //        printf("name=%s\tID=%d\n", s.name, s.ID);
-    //    }
-//    for (auto &c: class_list) {
-//        if (c.ID)
-//            printf("name=%s\tID=%d\n", c.name, c.ID);
-//    }
-//printf("Hello,world\n");
-    //printf("maxID=%d\tminID=%d", get_max_ID(class_list), get_min_ID(class_list));
-
+    }
 #endif
     return 0;
 }
