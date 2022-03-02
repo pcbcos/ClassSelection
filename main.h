@@ -12,23 +12,12 @@
 #include <cstring>
 #include "DataBase.h"
 #include "unistd.h"
+#include "admin_mode.h"
+#include "student_mode.h"
+
+extern uint32_t ID;
 
 void login();
-
-void student_querry();
-
-void student_addclass();
-
-void student_delclass();
-
-
-void admin_lookover();
-
-void admin_querry();
-
-void admin_modify();
-
-void admin_addclass();
 
 void callback(void* data);
 

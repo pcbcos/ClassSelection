@@ -167,23 +167,14 @@ uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N]) {
         return 0;
     }
 }
+template<typename T,std::size_t N>
+auto& get_itemRef_by_ID(uint32_t ID,T(&entity_list)[N]){
+    return entity_list[get_index_by_ID(ID,entity_list)];
+}
 
-//template<typename T, T* entity_list>
-//int ID_UP(const void *e1, const void *e2) {
-//    T t1 = entity_list[*(uint32_t *) e1];
-//    T t2 = entity_list[*(uint32_t *) e2];
-//    return t1.ID - t2.ID;
-//};
-//
-//template<typename T, T* entity_list>
-//int ID_DOWN(const void *e1, const void *e2) {
-//    T t1 = entity_list[*(uint32_t *) e1];
-//    T t2 = entity_list[*(uint32_t *) e2];
-//    return t2.ID - t1.ID;
-//};
 
 template<typename T, std::size_t N>
-uint32_t *widesearch(uint32_t ID, const char *name, const T(&entity_list)[N], const uint8_t &rank = 0) {
+uint32_t *widesearch(uint32_t ID, const char *name, T(&entity_list)[N], const uint8_t &rank = 0) {
     uint32_t i = 0;
     uint32_t m = 32;
     auto *result = (uint32_t *) malloc(32 * 4);
