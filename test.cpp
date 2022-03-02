@@ -50,7 +50,7 @@ void student_querry() { ; }
 
 void student_modify() { ; }
 
-void student_delclass() { ; }
+void student_overlook() { ; }
 
 void student_mode() {
     int p = 1, q = 2, r = 3, s = 4, *u;
@@ -76,7 +76,7 @@ void student_mode() {
             student_modify();
             break;
         case 3:
-            student_delclass();
+            student_overlook();
             break;
         case 4:
             return;

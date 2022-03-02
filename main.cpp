@@ -4,7 +4,7 @@
 #include "main.h"
 
 uint32_t myID;
-
+const wchar_t WEEK[7] = {L'日', L'一', L'二', L'三', L'四', L'五', L'六'};
 
 void login() {
     //newtInit();
@@ -74,17 +74,23 @@ int main() {
         }
     } while (1);
 #else
-//    for (auto &r: resource_list) {
-//        if (r.ID) {
-//            printf("ID:%d,周%d第%d节,教室:%s\n",r.ID,r.day,r.rank,r.name);
-//        }
-//    }
-    student_t s = student_list[get_index_by_ID(19201022, student_list)];
-    class_t& c1= get_itemRef_by_ID<class_t>(94);
-    class_t c2=class_list[get_index_by_ID(121,class_list)];
-    c1.credits=100.0;
-    printf("%d\n", list_at(student_list[get_index_by_ID(19201022, student_list)].student_class_link_head, 1));
-    printf("%lf",class_list[get_index_by_ID(94,class_list)].credits);
+    //    for (auto &r: resource_list) {
+    //        if (r.ID) {
+    //            printf("ID:%d,周%d第%d节,教室:%s\n",r.ID,r.day,r.rank,r.name);
+    //        }
+    //    }
+//        student_t s = student_list[get_index_by_ID(19201022, student_list)];
+//        class_t& c1= get_itemRef_by_ID<class_t>(94);
+//        class_t c2=class_list[get_index_by_ID(121,class_list)];
+//        c1.credits=100.0;
+//        printf("%d\n", list_at(student_list[get_index_by_ID(19201022, student_list)].student_class_link_head, 1));
+//        printf("%lf",class_list[get_index_by_ID(94,class_list)].credits);
+    for (auto &r: resource_list) {
+        if (r.ID) {
+            printf("%d\n",r.ID);
+        }
+
+    }
 #endif
     return 0;
 }

@@ -7,7 +7,7 @@ import copy
 
 class MyProvider(BaseProvider):
     ifake = Faker(['zh-CN'])
-
+    rescouceIDcount=1
     def student(self):
         age = random.randint(19, 23)
         ID = 19000000 + 20 * 10000 + random.randint(0, 16) * 100 + random.randint(0, 32)

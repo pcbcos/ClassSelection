@@ -16,6 +16,7 @@
 #include "student_mode.h"
 
 extern uint32_t myID;
+extern const wchar_t WEEK[7];
 
 void login();
 

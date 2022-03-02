@@ -436,6 +436,7 @@ void show_info_win(char *text) {
     newtWinMessage("信息", "确定", text);
 }
 
+
 void read_relation() {
     FILE *fp = fopen("../test_data_gen/relations.txt", "r");
     char buff[64]{};

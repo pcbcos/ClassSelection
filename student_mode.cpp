@@ -14,9 +14,9 @@ void student_mode() {
         newtCenteredWindow(50, 10, "学生模式-请选择您的操作");
         list = newtListbox(18, 3, 5, NEWT_FLAG_RETURNEXIT);
         newtListboxAppendEntry(list, "查询课程信息、成绩", &p);
-        newtListboxAppendEntry(list, "选课变更", &q);
-//newtListboxAppendEntry(list, "退课", &r);
-        newtListboxAppendEntry(list, "退出", &r);
+        newtListboxAppendEntry(list, "查看待选课程信息", &q);
+        newtListboxAppendEntry(list, "选课变更", &r);
+        newtListboxAppendEntry(list, "退出", &s);
         newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
         form = newtForm(NULL, NULL, 0);
         newtFormAddComponent(form, list);
@@ -29,12 +29,12 @@ void student_mode() {
                 student_querry();
                 break;
             case 2:
+                student_overlook();
+                break;
+            case 3:
                 student_modify();
                 break;
-//            case 3:
-//                student_delclass();
-//                break;
-            case 3:
+            case 4:
                 return;
         }
     } while (1);
@@ -65,6 +65,7 @@ void student_querry() {
 
 void student_modify() {
     auto &s = get_itemRef_by_ID<student_t>(myID);
+
     newtCls();
     newtRefresh();
     newtCenteredWindow(50, 20, "学生选课");
@@ -79,11 +80,36 @@ void student_modify() {
 
     int count = 0;
     uint32_t start_id = get_min_ID(class_list);
-    uint32_t end_id = get_max_ID(class_list);
+    uint32_t end_id = get_max_ID(class_list);//获取上下界，减少次数
     for (uint32_t id = start_id; id <= end_id; id++) {
         class_t c = get_itemRef_by_ID<class_t>(id);
-        if (c.ID) {
-            newtCheckboxTreeAddItem(checkboxTree, c.name, (void *) &count, 0, NEWT_ARG_APPEND, NEWT_ARG_LAST);
+        if (c.ID && !c.type) {
+            int flag = 0;
+            for (pNode p = s.student_class_link_head->next; p; p = p->next) {
+                if (c.ID == p->targetID) {
+                    flag = NEWT_FLAG_SELECTED;
+                    break;
+                }
+            }
+            char info[64]{};
+            sprintf(info, "%s  \t(%s)", c.name, c.type ? "选修" : "必修");
+            newtCheckboxTreeAddItem(checkboxTree, info, (void *) &count, flag, NEWT_ARG_APPEND, NEWT_ARG_LAST);
+            count++;
+        }
+    }
+    for (uint32_t id = start_id; id <= end_id; id++) {
+        class_t c = get_itemRef_by_ID<class_t>(id);
+        if (c.ID && c.type) {
+            int flag = 0;
+            for (pNode p = s.student_class_link_head->next; p; p = p->next) {
+                if (c.ID == p->targetID) {
+                    flag = NEWT_FLAG_SELECTED;
+                    break;
+                }
+            }
+            char info[64]{};
+            sprintf(info, "%s  \t(%s)", c.name, c.type ? "选修" : "必修");
+            newtCheckboxTreeAddItem(checkboxTree, info, (void *) &count, flag, NEWT_ARG_APPEND, NEWT_ARG_LAST);
             count++;
         }
     }
@@ -107,6 +133,75 @@ void student_modify() {
 
 }
 
-void student_delclass() { ; }
+void student_overlook() {
+    uint32_t ustart_id = get_min_ID(class_list);
+    uint32_t uend_id = get_max_ID(class_list);
+    uint32_t count = 0;
+    for (uint32_t id = ustart_id; id <= uend_id; id++) {
+        if (get_itemRef_by_ID<class_t>(id).ID) {
+            count++;
+        }
+    }
+    uint32_t zero_return = 0;
+
+//开始做列表的渲染,默认是升序的
+    newtRefresh();
+    newtCls();
+    newtRefresh();
+    newtComponent form2, list;
+    form2 = newtForm(NULL, NULL, 0);
+    newtCenteredWindow(80, 30, "浏览待选课程");
+    list = newtListbox(1, 1, 28, NEWT_ENTRY_RETURNEXIT);
+    newtListboxSetWidth(list, 48);
+    class_t c;
+    char text[64]{};
+
+
+    newtListboxAppendEntry(list, "返回", &zero_return);
+
+    uint32_t *index = (uint32_t *) malloc(count * sizeof(uint32_t));
+    memset(index, 0, count * sizeof(uint32_t));
+    uint32_t t = 0;
+    for (uint32_t id = ustart_id; id <= uend_id; id++) {
+        c = class_list[get_index_by_ID(id, class_list)];
+        if (c.ID) {
+            sprintf(text, "ID:%d\t课程名称:%s", c.ID, c.name);
+            newtListboxAppendEntry(list, text, index + t);
+            index[t++] = c.ID;
+            memset(text, 0, 64);
+        }
+    }
+    newtFormAddComponents(form2, list, NULL);
+    newtRunForm(form2);
+    uint32_t result_id = *(uint32_t *) newtListboxGetCurrent(list);
+    if (!result_id) {
+        newtFormDestroy(form2);
+        free(index);
+        return;
+    }else{
+        const class_t &C = get_itemRef_by_ID<class_t>(result_id);
+        pNode ct = C.class_teacher_link_head->next;
+        pNode cr =C.class_resource_link_head->next;
+        char text2[256] = {0};
+        //渲染文本
+        sprintf(text2,"课程名称:%s(%s)\n",C.name,C.type?"选修" : "必修");
+        sprintf(text2+ strlen(text2),"学分:%.1f\n",C.credits);
+        sprintf(text2+strlen(text2), "教师:");
+        for (pNode p = ct; p; p = p->next) {
+            sprintf(text2+strlen(text2),"%s ", get_itemRef_by_ID<teacher_t>(p->targetID).name);
+        }
+        sprintf(text2+strlen(text2), "\n");
+        sprintf(text2+strlen(text2), "时间地点:\n");
+        for(pNode p=cr;p;p=p->next){
+            const resource_t& r=get_itemRef_by_ID<resource_t>(p->targetID);
+            sprintf(text2+strlen(text2), "周%lc第%2d节\t%s\n",WEEK[r.day],r.rank,r.name);
+        }
+        show_info_win(text2);
+
+        newtFormDestroy(form2);
+        free(index);
+    }
+
+}
 
 #pragma clang diagnostic pop

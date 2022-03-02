@@ -135,7 +135,7 @@ void admin_lookover() {
                 s = student_list[get_index_by_ID(id, student_list)];
                 if (s.ID) {
                     sprintf(text, "ID:%d\t姓名:%s", s.ID, s.name);
-                    newtListboxAppendEntry(list, text, index + id);
+                    newtListboxAppendEntry(list, text, (int*)&id);
                     memset(text, 0, 64);
                 }
             }
@@ -161,7 +161,7 @@ void admin_lookover() {
             }
             break;
     }
-    free(index);
+//free(index);
 
     newtFormAddComponents(form2, list, NULL);
     newtRunForm(form2);

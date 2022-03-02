@@ -13,5 +13,5 @@ void student_querry();
 
 void student_modify();
 
-void student_delclass();
+void student_overlook();
 #endif //CLASSSELECTION_STUDENT_MODE_H
