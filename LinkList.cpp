@@ -4,79 +4,18 @@
 // Created by wengz on 2022/1/13.
 //
 #include "LinkList.h"
-
-
-/*
-Node_ptr list_create(void *first_entity) {
-    auto head = (Node_ptr) malloc(sizeof(Node));
-    head->entity = first_entity;
-    head->next = NULL;
-    return head;
-}
-
-Node_ptr list_append(Node_ptr head, void *entity_to_append) {
-    auto p = (Node_ptr) malloc(sizeof(Node));
-    p->entity = entity_to_append;
-    p->next = NULL;
-    Node_ptr temp = head;
-    while (temp->next != NULL) {
-        temp = temp->next;
-    }
-    temp->next = p;
-    return p;
-}
-
-void *list_at(Node_ptr head, uint16_t n) {
-//    if (!n) {
-//        return head->entity;
-//    } else {
-//        return list_at(head->next, n - 1);
-//    }
-    Node_ptr p = head;
-    if (n == 0) {
-        return head->entity;
-    }
-    for (int i = 0; i < n; i++) {
-        p = p->next;
-        if (!p) {
-            return NULL;
-        }
-    }
-    return p->entity;
-}
-
-Node_ptr list_del_item(Node_ptr head, uint16_t index) {
-    if (index == 0) {
-        Node_ptr new_head = head->next;
-        free(head);
-        return new_head;
-    }
-    Node_ptr p = head;
-    Node_ptr p_;
-    for (uint16_t i = 0; i < index; i++) {
-        if (p->next == NULL) {
-            return head;
-        }
-        p_ = p;
-        p = p->next;
-    }
-    p_->next = p->next;
-    free(p);
-    return head;
-}
-*/
-Node_ptr list_create(uint32_t targetID) {
-    auto head = (Node_ptr) malloc(sizeof(Node));
+pNode list_create(uint32_t targetID) {
+    auto head = (pNode) malloc(sizeof(Node));
     head->targetID = targetID;
     head->next = NULL;
     return head;
 }
 
-Node_ptr list_append(Node_ptr head, uint32_t targetID) {
-    auto p = (Node_ptr) malloc(sizeof(Node));
+pNode list_append(pNode head, uint32_t targetID) {
+    auto p = (pNode) malloc(sizeof(Node));
     p->targetID = targetID;
     p->next = NULL;
-    Node_ptr temp = head;
+    pNode temp = head;
     while (temp->next != NULL) {
         temp = temp->next;
     }
@@ -84,13 +23,8 @@ Node_ptr list_append(Node_ptr head, uint32_t targetID) {
     return p;
 }
 
-uint32_t list_at(Node_ptr head, uint16_t n) {
-//    if (!n) {
-//        return head->entity;
-//    } else {
-//        return list_at(head->next, n - 1);
-//    }
-    Node_ptr p = head;
+uint32_t list_at(pNode head, uint16_t n) {
+    pNode p = head;
     if (n == 0) {
         return head->targetID;
     }
@@ -103,14 +37,14 @@ uint32_t list_at(Node_ptr head, uint16_t n) {
     return p->targetID;
 }
 
-Node_ptr list_del_item(Node_ptr head, uint16_t index) {
+pNode list_del_item(pNode head, uint16_t index) {
     if (index == 0) {
-        Node_ptr new_head = head->next;
+        pNode new_head = head->next;
         free(head);
         return new_head;
     }
-    Node_ptr p = head;
-    Node_ptr p_;
+    pNode p = head;
+    pNode p_;
     for (uint16_t i = 0; i < index; i++) {
         if (p->next == NULL) {
             return head;
@@ -123,12 +57,12 @@ Node_ptr list_del_item(Node_ptr head, uint16_t index) {
     return head;
 }
 
-void list_del_all(Node_ptr head) {
+void list_del_all(pNode head) {
     if (!head) {
         return;
     }
-    Node_ptr h = head;
-    Node_ptr p = head->next;
+    pNode h = head;
+    pNode p = head->next;
     while (p) {
         free(h);
         h = p;
@@ -136,4 +70,5 @@ void list_del_all(Node_ptr head) {
     }
     free(h);
 }
+
 #pragma clang diagnostic pop
