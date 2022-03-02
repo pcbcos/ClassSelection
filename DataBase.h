@@ -126,16 +126,10 @@ resource_t class_time_analysis(char *text_p1, char *text_p2);
 //打印课程信息
 void printclassinfo(class_t c);
 
-void dump_class_data_gui(char mode); //将课程信息存入磁盘
-void dump_student_data_gui(char mode);//将学生信息存入磁盘
-void dump_teacher_data_gui(char mode); //将教师的信息存入磁盘
 
-
-void dump_class_data(char mode); //将课程信息存入磁盘
-void dump_student_data(char mode);//将学生信息存入磁盘
-void dump_teacher_data(char mode); //将教师的信息存入磁盘
 
 void DataBaseInit();//数据库初始化
+void DataBaseSave();//数据库数据保存
 void show_warning_win(char *text);//显示错误信息
 void show_info_win(char *text);
 
@@ -148,6 +142,16 @@ void read_class_data();
 void read_resource_data();
 
 void read_relation();
+
+void save_student_data();
+
+void save_teacher_data();
+
+void save_class_data();
+
+void save_resource_data();
+
+void save_relation();
 
 uint32_t hashID(uint32_t ID, uint64_t max);
 

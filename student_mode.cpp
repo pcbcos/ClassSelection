@@ -45,7 +45,7 @@ void student_querry() {
     newtRefresh();
     uint32_t index = get_index_by_ID(myID, student_list);
     student_t s = student_list[index];
-    char text[256] = {0};
+    char text[512] = {0};
     wchar_t sex = s.sex ? L'女' : L'男';
     pNode myclass = s.student_class_link_head->next; //TODO:把添加class的teacher信息
     sprintf(text, "姓名:%s\n学号:%d\n性别:%lc\n已获得学分:%d\n已选课程:\n", s.name, s.ID, sex, s.credits);

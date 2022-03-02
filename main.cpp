@@ -70,6 +70,7 @@ int main() {
             case 4:
                 newtFinished();
                 printf("ID=%d\n", myID);
+                DataBaseSave();
                 exit(0);
         }
     } while (1);
@@ -89,8 +90,8 @@ int main() {
         if (r.ID) {
             printf("%d\n",r.ID);
         }
-
     }
+    DataBaseSave();
 #endif
     return 0;
 }
@@ -100,6 +101,7 @@ void callback(void *data) {
     newtRefresh();
     newtFinished();
     printf("Hello,world!\n");
+    DataBaseSave();
     exit(1);
 }
 

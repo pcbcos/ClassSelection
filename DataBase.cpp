@@ -181,61 +181,61 @@ void printclassinfo(class_t c) {
 
 
 //将课程信息存入磁盘 TODO:模式应该是写错了,要修正
-void dump_class_data(char mode) {
-    FILE *fp = NULL;
-    if (mode == 'a') {
-        fp = fopen("class_data", "ab");
-        if (fp == NULL) {
-            fp = fopen("class_data", "wb");
-        }
-    } else if (mode == 'w') {
-        fp = fopen("class_data", "wb");
-    }
-    if (fp == NULL) {
-        show_warning_win("ERROR!");
-        return;
-    }
-    //fwrite()
-
-}
-
-//将学生信息存入磁盘
-void dump_student_data(char mode) {
-
-
-}
-
-//将教师的信息存入磁盘
-void dump_teacher_data(char mode) {
-
-
-}
-
-
-void dump_class_data_gui(char mode) {
-    FILE *fp = NULL;
-    if (mode == 'a') {
-        fp = fopen("class_data", "ab");
-        if (fp == NULL) {
-            show_warning_win("文 件 不 存 在 , 按 任 意 键 创 建 ");
-            fp = fopen("class_data", "wb");
-        }
-    } else if (mode == 'w') {
-        fp = fopen("class_data", "wb");
-    }
-    if (fp == NULL) {
-        show_warning_win("文 件 加 载 失 败 ");
-    }
-
-}
-
-void dump_student_data_gui(char mode) {
-
-}
-
-void dump_teacher_data_gui(char mode) {
-
-}
+//void dump_class_data(char mode) {
+//    FILE *fp = NULL;
+//    if (mode == 'a') {
+//        fp = fopen("class_data", "ab");
+//        if (fp == NULL) {
+//            fp = fopen("class_data", "wb");
+//        }
+//    } else if (mode == 'w') {
+//        fp = fopen("class_data", "wb");
+//    }
+//    if (fp == NULL) {
+//        show_warning_win("ERROR!");
+//        return;
+//    }
+//    //fwrite()
+//
+//}
+//
+////将学生信息存入磁盘
+//void dump_student_data(char mode) {
+//
+//
+//}
+//
+////将教师的信息存入磁盘
+//void dump_teacher_data(char mode) {
+//
+//
+//}
+//
+//
+//void dump_class_data_gui(char mode) {
+//    FILE *fp = NULL;
+//    if (mode == 'a') {
+//        fp = fopen("class_data", "ab");
+//        if (fp == NULL) {
+//            show_warning_win("文 件 不 存 在 , 按 任 意 键 创 建 ");
+//            fp = fopen("class_data", "wb");
+//        }
+//    } else if (mode == 'w') {
+//        fp = fopen("class_data", "wb");
+//    }
+//    if (fp == NULL) {
+//        show_warning_win("文 件 加 载 失 败 ");
+//    }
+//
+//}
+//
+//void dump_student_data_gui(char mode) {
+//
+//}
+//
+//void dump_teacher_data_gui(char mode) {
+//
+//}
 
 
 //从磁盘中读取学生信息,更新index-ID索引
@@ -263,6 +263,7 @@ void dump_teacher_data_gui(char mode) {
 //    }
 //    fclose(fp);
 //}
+
 void read_student_data() {
     FILE *fp = fopen("../test_data_gen/student_data", "rb");
     student_t temp{0};
@@ -369,7 +370,6 @@ void read_resource_data() {
     fclose(fp);
 }
 
-
 void DataBaseInit() {
     //初始化0号实体
     class_list[0] = class_zero;
@@ -394,20 +394,28 @@ void DataBaseInit() {
     //从磁盘中读入关系 TODO:实现以下函数
     read_relation();
 
-    for(uint32_t index=1;index<MAX_STUDENT_NUM;index++){
+    for (uint32_t index = 1; index < MAX_STUDENT_NUM; index++) {
         list_del_same(student_list[index].student_class_link_head);
     }
 
-    for(uint32_t index=1;index<MAX_CLASS_NUM;index++){
+    for (uint32_t index = 1; index < MAX_CLASS_NUM; index++) {
         list_del_same(class_list[index].class_resource_link_head);
         list_del_same(class_list[index].class_teacher_link_head);
         list_del_same(class_list[index].class_student_link_head);
     }
 
-    for(uint32_t index=1;index<MAX_TEACHER_NUM;index++){
+    for (uint32_t index = 1; index < MAX_TEACHER_NUM; index++) {
         list_del_same(teacher_list[index].teacher_class_link_head);
     }
 
+}
+
+void DataBaseSave() {
+    save_student_data();
+    save_teacher_data();
+    save_class_data();
+    save_resource_data();
+    save_relation();
 }
 
 uint32_t get_min_available_ID(const uint32_t *index_list, uint32_t max_num) {
@@ -436,7 +444,6 @@ void show_info_win(char *text) {
     newtWinMessage("信息", "确定", text);
 }
 
-
 void read_relation() {
     FILE *fp = fopen("../test_data_gen/relations.txt", "r");
     char buff[64]{};
@@ -452,25 +459,25 @@ void read_relation() {
         if (T1 == 'c') {
             switch (T2) {
                 case 's':
-                    addRelation<student_t>(ID1,ID2,student_list);
+                    addRelation<student_t>(ID1, ID2, student_list);
                     break;
                 case 't':
-                    addRelation<teacher_t>(ID1,ID2,teacher_list);
+                    addRelation<teacher_t>(ID1, ID2, teacher_list);
                     break;
                 case 'r':
-                    addRelation<resource_t>(ID1,ID2,resource_list);
+                    addRelation<resource_t>(ID1, ID2, resource_list);
                     break;
             }
         } else {
             switch (T1) {
                 case 's':
-                    addRelation<student_t>(ID2,ID1,student_list);
+                    addRelation<student_t>(ID2, ID1, student_list);
                     break;
                 case 't':
-                    addRelation<teacher_t>(ID2,ID1,teacher_list);
+                    addRelation<teacher_t>(ID2, ID1, teacher_list);
                     break;
                 case 'r':
-                    addRelation<resource_t>(ID2,ID1,resource_list);
+                    addRelation<resource_t>(ID2, ID1, resource_list);
                     break;
             }
         }
@@ -483,5 +490,67 @@ void read_relation() {
     fclose(fp);
 }
 
+void save_student_data() {
+    FILE *fp = fopen("../test_data_gen/student_data", "wb");
+    fwrite(&student_num, sizeof(student_num), 1, fp);
+    uint32_t start_id = get_min_ID(student_list);
+    uint32_t end_id = get_max_ID(student_list);
+    for (uint32_t id = start_id; id <= end_id; id++) {
+        student_t s = get_itemRef_by_ID<student_t>(id);
+        if (s.ID) {
+            s.student_class_link_head = NULL;
+            fwrite(&s, sizeof(student_t), 1, fp);
+        }
+    }
+    fclose(fp);
+}
+
+void save_teacher_data() {
+    FILE *fp = fopen("../test_data_gen/teacher_data", "wb");
+    fwrite(&teacher_num, sizeof(teacher_num), 1, fp);
+    uint32_t start_id = get_min_ID(teacher_list);
+    uint32_t end_id = get_max_ID(teacher_list);
+    for (uint32_t id = start_id; id <= end_id; id++) {
+        teacher_t s = get_itemRef_by_ID<teacher_t>(id);
+        if (s.ID) {
+            s.teacher_class_link_head = NULL;
+            fwrite(&s, sizeof(teacher_t), 1, fp);
+        }
+    }
+    fclose(fp);
+}
+
+void save_class_data() {
+    FILE *fp = fopen("../test_data_gen/class_data", "wb");
+    fwrite(&class_num, sizeof(class_num), 1, fp);
+    uint32_t start_id = get_min_ID(class_list);
+    uint32_t end_id = get_max_ID(class_list);
+    for (uint32_t id = start_id; id <= end_id; id++) {
+        class_t s = get_itemRef_by_ID<class_t>(id);
+        if (s.ID) {
+            s.class_resource_link_head = NULL;
+            s.class_teacher_link_head = NULL;
+            s.class_student_link_head = NULL;
+            fwrite(&s, sizeof(class_t), 1, fp);
+        }
+    }
+    fclose(fp);
+}
+
+void save_resource_data() {
+    FILE *fp = fopen("../test_data_gen/resource_data", "wb");
+    fwrite(&resource_num, sizeof(resource_num), 1, fp);
+    uint32_t start_id = get_min_ID(resource_list);
+    uint32_t end_id = get_max_ID(resource_list);
+    for (uint32_t id = start_id; id <= end_id; id++) {
+        resource_t s = get_itemRef_by_ID<resource_t>(id);
+        if (s.ID) {
+            fwrite(&s, sizeof(resource_t), 1, fp);
+        }
+    }
+    fclose(fp);
+}
+
+void save_relation() {}
 
 #pragma clang diagnostic pop
