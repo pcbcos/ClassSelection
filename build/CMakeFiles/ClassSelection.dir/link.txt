@@ -1,1 +1,0 @@
-/usr/bin/g++ CMakeFiles/ClassSelection.dir/main.cpp.o -o ClassSelection   -L/root/ClassSelection/lib  -Wl,-rpath,/root/ClassSelection/lib -lnewt libcore.a 
