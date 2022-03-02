@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-uint32_t ID;
+uint32_t myID;
 
 
 void login() {
@@ -24,7 +24,7 @@ void login() {
     form = newtForm(NULL, NULL, 0);
     newtFormAddComponents(form, label1, label2, entry1, entry2, button, NULL);
     newtRunForm(form);
-    ID = atoi(id);
+    myID = atoi(id);
     if (strcmp(id, "19201022") == 0 and strcmp(passwd, "kalium1910") == 0) {
         newtRefresh();
         newtFormDestroy(form);
@@ -69,7 +69,7 @@ int main() {
                 break;
             case 4:
                 newtFinished();
-                printf("ID=%d\n", ID);
+                printf("ID=%d\n", myID);
                 exit(0);
         }
     } while (1);

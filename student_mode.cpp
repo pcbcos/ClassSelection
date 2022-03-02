@@ -40,11 +40,16 @@ void student_mode() {
 void student_querry() {
     newtCls();
     newtRefresh();
-    uint32_t index = get_index_by_ID(ID, student_list);
+    uint32_t index = get_index_by_ID(myID, student_list);
     student_t s = student_list[index];
-    char text[128] = {0};
+    char text[256] = {0};
     wchar_t sex = s.sex ? L'女' : L'男';
-    sprintf(text, "姓名:%s\n学号:%d\n性别:%lc\n已获得学分:%d\n", s.name, s.ID, sex, s.credits);
+    pNode myclass=s.student_class_link_head->next;
+    sprintf(text, "姓名:%s\n学号:%d\n性别:%lc\n已获得学分:%d\n已选课程:\n", s.name, s.ID, sex, s.credits);
+    while(myclass){
+        sprintf(text+ strlen(text),"课程名:%s \t成绩:未公布\n", get_itemRef_by_ID<class_t>(myclass->targetID).name);
+        myclass=myclass->next;
+    }
     newtComponent form, t, button;
     t = newtTextboxReflowed(1, 1, text, 30, 5, 5, 0);
     newtCenteredWindow(100, 20, "学生信息");
@@ -56,10 +61,10 @@ void student_querry() {
 }
 
 void student_addclass() {
-//    student_t& s= get_itemRef_by_ID()
-//    newtCls();
-//    newtRefresh();
-//    newtCenteredWindow(50,20,"学生选课");
+    auto& s= get_itemRef_by_ID<student_t>(myID);
+    newtCls();
+    newtRefresh();
+    newtCenteredWindow(50,20,"学生选课");
 
 }
 

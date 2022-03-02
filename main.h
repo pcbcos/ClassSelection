@@ -15,7 +15,7 @@
 #include "admin_mode.h"
 #include "student_mode.h"
 
-extern uint32_t ID;
+extern uint32_t myID;
 
 void login();
 
