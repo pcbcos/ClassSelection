@@ -4,11 +4,7 @@
 
 #ifndef CLASSSELECTION_STUDENT_MODE_H
 #define CLASSSELECTION_STUDENT_MODE_H
-#include "newt.h"
-#include "stdio.h"
-#include "stdlib.h"
-#include "stdint.h"
-#include "DataBase.h"
+
 #include "main.h"
 
 void student_mode();

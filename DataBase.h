@@ -153,6 +153,10 @@ uint32_t hashID(uint32_t ID, uint64_t max);
 
 uint32_t get_min_available_ID(const uint32_t *index_list, uint32_t max_num);//自动找一个ID,利用了堆区数组自动零初始化的性质
 
+template<typename T>
+concept have_relation_with_class = std::is_same_v<T, student_t> || std::is_same_v<T, resource_t> ||
+                                   std::is_same_v<T, teacher_t>;
+
 template<typename T, std::size_t N>
 uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N]) {
     uint32_t hID = ID;
@@ -167,9 +171,21 @@ uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N]) {
         return 0;
     }
 }
-template<typename T,std::size_t N>
-auto& get_itemRef_by_ID(uint32_t ID,T(&entity_list)[N]){
-    return entity_list[get_index_by_ID(ID,entity_list)];
+//template<typename T,std::size_t N>
+//auto& get_itemRef_by_ID(uint32_t ID,T(&entity_list)[N]){
+//    return entity_list[get_index_by_ID(ID,entity_list)];
+//}
+template<typename T> requires have_relation_with_class<T> || std::is_same_v<T,class_t>
+T& get_itemRef_by_ID(uint32_t ID){
+    if constexpr(std::is_same_v<T,student_t>){
+        return student_list[get_index_by_ID(ID,student_list)];
+    }else if constexpr(std::is_same_v<T,class_t>){
+        return class_list[get_index_by_ID(ID,class_list)];
+    }else if constexpr(std::is_same_v<T,resource_t>){
+        return resource_list[get_index_by_ID(ID,resource_list)];
+    } else{
+        return teacher_list[get_index_by_ID(ID,teacher_list)];
+    }
 }
 
 
@@ -247,9 +263,7 @@ constexpr decltype(auto) get_T_list() noexcept {
     }
 }
 
-template<typename T>
-concept have_relation_with_class = std::is_same_v<T, student_t> || std::is_same_v<T, resource_t> ||
-                                   std::is_same_v<T, teacher_t>;
+
 
 template<typename T>
 requires have_relation_with_class<T>

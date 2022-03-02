@@ -80,7 +80,7 @@ int main() {
 //        }
 //    }
     student_t s = student_list[get_index_by_ID(19201022, student_list)];
-    class_t& c1= get_itemRef_by_ID(94,class_list);
+    class_t& c1= get_itemRef_by_ID<class_t>(94);
     class_t c2=class_list[get_index_by_ID(121,class_list)];
     c1.credits=100.0;
     printf("%d\n", list_at(student_list[get_index_by_ID(19201022, student_list)].student_class_link_head, 1));

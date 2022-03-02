@@ -55,6 +55,12 @@ void student_querry() {
     newtFormDestroy(form);
 }
 
-void student_addclass() { ; }
+void student_addclass() {
+//    student_t& s= get_itemRef_by_ID()
+//    newtCls();
+//    newtRefresh();
+//    newtCenteredWindow(50,20,"学生选课");
+
+}
 
 void student_delclass() { ; }
