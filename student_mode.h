@@ -11,7 +11,7 @@ void student_mode();
 
 void student_querry();
 
-void student_addclass();
+void student_modify();
 
 void student_delclass();
 #endif //CLASSSELECTION_STUDENT_MODE_H
