@@ -7,6 +7,7 @@ include_directories(include)
 link_directories(lib)
 
 add_library(core STATIC DataBase.cpp LinkList.cpp admin_mode.cpp student_mode.cpp)
+add_definitions(-Wno-write-strings)
 add_definitions(-DTEST_MENU=1)
 add_executable(ClassSelection main.cpp)
 add_executable(Test test.cpp)

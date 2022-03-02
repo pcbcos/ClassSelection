@@ -25,7 +25,12 @@ void login() {
     newtFormAddComponents(form, label1, label2, entry1, entry2, button, NULL);
     newtRunForm(form);
     myID = atoi(id);
-    if (strcmp(id, "19201022") == 0 and strcmp(passwd, "kalium1910") == 0) {
+    if(!get_itemRef_by_ID<student_t>(myID).ID){
+        newtFinished();
+        show_warning_win("Not Found!");
+        exit(1);
+    }
+    if (strcmp(passwd, "kalium1910") == 0) {
         newtRefresh();
         newtFormDestroy(form);
         return;
@@ -71,6 +76,7 @@ int main() {
                 newtFinished();
                 printf("ID=%d\n", myID);
                 DataBaseSave();
+                printf("Saved!\n");
                 exit(0);
         }
     } while (1);
@@ -102,6 +108,7 @@ void callback(void *data) {
     newtFinished();
     printf("Hello,world!\n");
     DataBaseSave();
+    printf("Saved!\n");
     exit(1);
 }
 

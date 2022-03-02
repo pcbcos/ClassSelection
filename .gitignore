@@ -8,4 +8,5 @@ test_data_gen/__pycache__/
 /test_data_gen/.idea/
 /cmake-build-debug-clang/
 /build/
+/Release/
 /cmake-build-debug-gcc/

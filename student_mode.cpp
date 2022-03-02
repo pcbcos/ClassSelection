@@ -166,7 +166,7 @@ void student_overlook() {
         for (uint32_t id = ustart_id; id <= uend_id; id++) {
             c = class_list[get_index_by_ID(id, class_list)];
             if (c.ID) {
-                sprintf(text, "ID:%d\t课程名称:%s", c.ID, c.name);
+                sprintf(text, "ID:%d \t课程名称:%s", c.ID, c.name);
                 newtListboxAppendEntry(list, text, index + t);
                 index[t++] = c.ID;
                 memset(text, 0, 64);
