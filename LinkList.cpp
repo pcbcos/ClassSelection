@@ -4,6 +4,7 @@
 // Created by wengz on 2022/1/13.
 //
 #include "LinkList.h"
+
 pNode list_create(uint32_t targetID) {
     auto head = (pNode) malloc(sizeof(Node));
     head->targetID = targetID;
@@ -69,6 +70,25 @@ void list_del_all(pNode head) {
         p = p->next;
     }
     free(h);
+}
+
+void list_del_same(pNode head) {
+    if(!head) return;
+    for (pNode p = head->next; p; p = p->next) {
+        uint32_t ID = p->targetID;
+        pNode p2 = p->next;
+        pNode p3 = p;
+        for (; p2;) {
+            if (p2->targetID == ID) {
+                p3->next = p2->next;
+                free(p2);
+                p2 = p3->next;
+                continue;
+            }
+            p3 = p2;
+            p2 = p2->next;
+        }
+    }
 }
 
 #pragma clang diagnostic pop

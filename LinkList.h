@@ -29,4 +29,5 @@ pNode list_append(pNode head, uint32_t targetID);
 uint32_t list_at(pNode head, uint16_t n);
 pNode list_del_item(pNode head, uint16_t index);
 void list_del_all(pNode head);
+void list_del_same(pNode head);
 #endif //CLASSSELECTION_LINKLIST_H

@@ -394,6 +394,20 @@ void DataBaseInit() {
     //从磁盘中读入关系 TODO:实现以下函数
     read_relation();
 
+    for(uint32_t index=1;index<MAX_STUDENT_NUM;index++){
+        list_del_same(student_list[index].student_class_link_head);
+    }
+
+    for(uint32_t index=1;index<MAX_CLASS_NUM;index++){
+        list_del_same(class_list[index].class_resource_link_head);
+        list_del_same(class_list[index].class_teacher_link_head);
+        list_del_same(class_list[index].class_student_link_head);
+    }
+
+    for(uint32_t index=1;index<MAX_TEACHER_NUM;index++){
+        list_del_same(teacher_list[index].teacher_class_link_head);
+    }
+
 }
 
 uint32_t get_min_available_ID(const uint32_t *index_list, uint32_t max_num) {

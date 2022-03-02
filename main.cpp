@@ -667,11 +667,7 @@ void admin_modify() {
 void admin_addclass() { ; }
 
 int main() {
-    read_student_data();
-    read_class_data();
-    read_resource_data();
-    read_teacher_data();
-    read_relation();
+    DataBaseInit();
 #if TEST_MENU
     newtInit();
     newtSetSuspendCallback(callback, NULL);
