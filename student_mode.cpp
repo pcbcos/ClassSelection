@@ -143,65 +143,66 @@ void student_overlook() {
         }
     }
     uint32_t zero_return = 0;
+    uint32_t *index = (uint32_t *) malloc(count * sizeof(uint32_t));
+    memset(index, 0, count * sizeof(uint32_t));
 
-//开始做列表的渲染,默认是升序的
+
+    //开始做列表的渲染,默认是升序的
     newtRefresh();
     newtCls();
     newtRefresh();
-    newtComponent form2, list;
-    form2 = newtForm(NULL, NULL, 0);
     newtCenteredWindow(80, 30, "浏览待选课程");
-    list = newtListbox(1, 1, 28, NEWT_ENTRY_RETURNEXIT);
-    newtListboxSetWidth(list, 48);
-    class_t c;
-    char text[64]{};
+    uint32_t current = 1;
+    while (1) {
+        newtComponent form2, list;
+        form2 = newtForm(NULL, NULL, 0);
+        list = newtListbox(1, 1, 28, NEWT_ENTRY_RETURNEXIT);
+        newtListboxSetWidth(list, 48);
+        class_t c;
+        char text[64]{};
+        newtListboxAppendEntry(list, "返回", &zero_return);
 
-
-    newtListboxAppendEntry(list, "返回", &zero_return);
-
-    uint32_t *index = (uint32_t *) malloc(count * sizeof(uint32_t));
-    memset(index, 0, count * sizeof(uint32_t));
-    uint32_t t = 0;
-    for (uint32_t id = ustart_id; id <= uend_id; id++) {
-        c = class_list[get_index_by_ID(id, class_list)];
-        if (c.ID) {
-            sprintf(text, "ID:%d\t课程名称:%s", c.ID, c.name);
-            newtListboxAppendEntry(list, text, index + t);
-            index[t++] = c.ID;
-            memset(text, 0, 64);
+        uint32_t t = 0;
+        for (uint32_t id = ustart_id; id <= uend_id; id++) {
+            c = class_list[get_index_by_ID(id, class_list)];
+            if (c.ID) {
+                sprintf(text, "ID:%d\t课程名称:%s", c.ID, c.name);
+                newtListboxAppendEntry(list, text, index + t);
+                index[t++] = c.ID;
+                memset(text, 0, 64);
+            }
         }
-    }
-    newtFormAddComponents(form2, list, NULL);
-    newtRunForm(form2);
-    uint32_t result_id = *(uint32_t *) newtListboxGetCurrent(list);
-    if (!result_id) {
+        newtListboxSetCurrent(list, (int) current);
+        newtFormAddComponents(form2, list, NULL);
+        newtRunForm(form2);
+        current = (uint32_t *) newtListboxGetCurrent(list) - index+1;
+        uint32_t result_id = *(uint32_t *) newtListboxGetCurrent(list);
+        if (!result_id) {
+            newtFormDestroy(form2);
+            free(index);
+            return;
+        } else {
+            const class_t &C = get_itemRef_by_ID<class_t>(result_id);
+            pNode ct = C.class_teacher_link_head->next;
+            pNode cr = C.class_resource_link_head->next;
+            char text2[256] = {0};
+            //渲染文本
+            sprintf(text2, "课程名称:%s(%s)\n", C.name, C.type ? "选修" : "必修");
+            sprintf(text2 + strlen(text2), "学分:%.1f\n", C.credits);
+            sprintf(text2 + strlen(text2), "教师:");
+            for (pNode p = ct; p; p = p->next) {
+                sprintf(text2 + strlen(text2), "%s ", get_itemRef_by_ID<teacher_t>(p->targetID).name);
+            }
+            sprintf(text2 + strlen(text2), "\n");
+            sprintf(text2 + strlen(text2), "时间地点:\n");
+            for (pNode p = cr; p; p = p->next) {
+                const resource_t &r = get_itemRef_by_ID<resource_t>(p->targetID);
+                sprintf(text2 + strlen(text2), "周%lc第%2d节\t%s\n", WEEK[r.day], r.rank, r.name);
+            }
+            show_info_win(text2);
+        }
         newtFormDestroy(form2);
-        free(index);
-        return;
-    }else{
-        const class_t &C = get_itemRef_by_ID<class_t>(result_id);
-        pNode ct = C.class_teacher_link_head->next;
-        pNode cr =C.class_resource_link_head->next;
-        char text2[256] = {0};
-        //渲染文本
-        sprintf(text2,"课程名称:%s(%s)\n",C.name,C.type?"选修" : "必修");
-        sprintf(text2+ strlen(text2),"学分:%.1f\n",C.credits);
-        sprintf(text2+strlen(text2), "教师:");
-        for (pNode p = ct; p; p = p->next) {
-            sprintf(text2+strlen(text2),"%s ", get_itemRef_by_ID<teacher_t>(p->targetID).name);
-        }
-        sprintf(text2+strlen(text2), "\n");
-        sprintf(text2+strlen(text2), "时间地点:\n");
-        for(pNode p=cr;p;p=p->next){
-            const resource_t& r=get_itemRef_by_ID<resource_t>(p->targetID);
-            sprintf(text2+strlen(text2), "周%lc第%2d节\t%s\n",WEEK[r.day],r.rank,r.name);
-        }
-        show_info_win(text2);
-
-        newtFormDestroy(form2);
-        free(index);
     }
-
 }
 
 #pragma clang diagnostic pop
