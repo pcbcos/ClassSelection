@@ -1,0 +1,1 @@
+/usr/bin/g++ CMakeFiles/Test.dir/test.cpp.o -o Test   -L/root/ClassSelection/lib  -Wl,-rpath,/root/ClassSelection/lib -lnewt libcore.a 

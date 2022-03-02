@@ -1,0 +1,5 @@
+/root/ClassSelection/build/CMakeFiles/core.dir
+/root/ClassSelection/build/CMakeFiles/edit_cache.dir
+/root/ClassSelection/build/CMakeFiles/rebuild_cache.dir
+/root/ClassSelection/build/CMakeFiles/ClassSelection.dir
+/root/ClassSelection/build/CMakeFiles/Test.dir

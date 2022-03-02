@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcore.a CMakeFiles/core.dir/DataBase.cpp.o CMakeFiles/core.dir/LinkList.cpp.o CMakeFiles/core.dir/admin_mode.cpp.o CMakeFiles/core.dir/student_mode.cpp.o
+/usr/bin/ranlib libcore.a

@@ -75,8 +75,21 @@ void student_addclass() {
     void** ptr;
     checkboxTree= newtCheckboxTreeMulti(1,1,10," *",NEWT_FLAG_SCROLL);
     newtCheckboxTreeSetWidth(checkboxTree,32);
-    newtCheckboxTreeAddItem(checkboxTree,"text1",(void*)2,NEWT_FLAG_SELECTED,NEWT_ARG_APPEND,NEWT_ARG_LAST);
-    newtCheckboxTreeAddItem(checkboxTree,"text2",(void*)3,NEWT_FLAG_SELECTED,NEWT_ARG_APPEND,NEWT_ARG_LAST);
+    //newtCheckboxTreeAddItem(checkboxTree,"text1",(void*)2,NEWT_FLAG_SELECTED,NEWT_ARG_APPEND,NEWT_ARG_LAST);
+    
+    //newtCheckboxTreeAddItem(checkboxTree,"text2",(void*)3,NEWT_FLAG_SELECTED,NEWT_ARG_APPEND,NEWT_ARG_LAST);
+    int count =0;
+    uint32_t start_id=get_min_ID(class_list);
+    uint32_t end_id=get_max_ID(class_list);
+    for(int id=start_id;index<end_id;id++){
+        if(get_itemRef_by_ID<class_id>(id).ID){
+            class_t c=class_list[index];
+            newtCheckboxTreeAddItem(checkboxTree,c.name,(void*)&count,0,NEWT_ARG_APPEND,NEWT_ARG_LAST);
+            count++;
+        }
+    }
+    
+    
     result=newtCheckboxTreeGetSelection(checkboxTree,&numselected);
     newtFormAddComponent(form,checkboxTree);
 
