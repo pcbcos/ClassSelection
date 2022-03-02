@@ -19,18 +19,6 @@ typedef pNode TeacherClassLink;
 typedef pNode ClassStudentLink;
 typedef pNode StudentClassLink;
 
-
-/*历史版本，保留备用
-struct Node {
-    void *entity;
-    pNode next;
-};
-
-pNode list_create(void *first_entity);
-pNode list_append(pNode head, void *entity_to_append);
-void *list_at(pNode head, uint16_t n);
-pNode list_del_item(pNode head, uint16_t index);
-*/
 struct Node{
     uint32_t targetID;
     pNode next;
