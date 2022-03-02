@@ -290,18 +290,7 @@ void test() {
 }
 
 int main(int argc, char *args[]) {
-    if (argc != 3) {
-        printf("请输入正确的账号密码!\n");
-        getchar();
-        return 1;
-    } else {
-        if (strcmp(args[1], "wengzy1920") == 0 && strcmp(args[2], "kalium1910") == 0) { ;
-        } else {
-            printf("账号密码无效!\n");
-            getchar();
-            return 2;
-        }
-    }
+
     newtComponent list, fm;
     int p = 1, q = 2, r = 3, s = 4, t = 5, *u;
     newtInit();
@@ -323,7 +312,9 @@ int main(int argc, char *args[]) {
         newtFormDestroy(fm);
         switch (*u) {
             case 1:
-                student_mode();
+                //student_mode();
+                check_radio();
+//                newtCheckboxTree()
                 break;
             case 2:
                 admin_mode();

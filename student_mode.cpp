@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "modernize-use-nullptr"
 //
 // Created by cosine on 2022/3/2.
 //
@@ -44,7 +46,7 @@ void student_querry() {
     student_t s = student_list[index];
     char text[256] = {0};
     wchar_t sex = s.sex ? L'女' : L'男';
-    pNode myclass=s.student_class_link_head->next;
+    pNode myclass=s.student_class_link_head->next; //TODO:把添加class的teacher信息
     sprintf(text, "姓名:%s\n学号:%d\n性别:%lc\n已获得学分:%d\n已选课程:\n", s.name, s.ID, sex, s.credits);
     while(myclass){
         sprintf(text+ strlen(text),"课程名:%s \t成绩:未公布\n", get_itemRef_by_ID<class_t>(myclass->targetID).name);
@@ -65,7 +67,22 @@ void student_addclass() {
     newtCls();
     newtRefresh();
     newtCenteredWindow(50,20,"学生选课");
+    newtComponent form,checkboxTree;
+    form= newtForm(NULL,NULL,0);
+    int cbvalue=0;
+    int numselected;
+    const void **result;
+    void** ptr;
+    checkboxTree= newtCheckboxTreeMulti(1,1,10," *",NEWT_FLAG_SCROLL);
+    newtCheckboxTreeSetWidth(checkboxTree,32);
+    newtCheckboxTreeAddItem(checkboxTree,"text1",(void*)2,NEWT_FLAG_SELECTED,NEWT_ARG_APPEND,NEWT_ARG_LAST);
+    newtCheckboxTreeAddItem(checkboxTree,"text2",(void*)3,NEWT_FLAG_SELECTED,NEWT_ARG_APPEND,NEWT_ARG_LAST);
+    result=newtCheckboxTreeGetSelection(checkboxTree,&numselected);
+    newtFormAddComponent(form,checkboxTree);
+
+    newtRunForm(form);
 
 }
 
 void student_delclass() { ; }
+#pragma clang diagnostic pop
