@@ -161,23 +161,23 @@ resource_t class_time_analysis(char *text_p1, char *text_p2) {
 }
 
 //TODO:要修正，这个是原版的方案,改用新版ID索引方案
-void printclassinfo(class_t c) {
-    printf("ID:%d\n", c.ID);
-    printf("课程名称:%s\n", c.name);
-    printf("类型:%s\n", c.type ? "选修" : "必修");
-    printf("最大学生容量:%d\n", c.max_stu);
-    printf("当前学生人数:%d\n", c.now_stu);
-    printf("--------上课时间和地点------\n");
-
-    //printf("时间:")
-    ClassResourceLink info = c.class_resource_link_head;
-    resource_t *t;
-    int i = 0;
-    while (t = (resource_t *) (list_at(info, i))) {
-        i++;
-        printf("周%s第%d节 %s\n", week[t->day], t->rank, t->name);
-    }
-}
+//void printclassinfo(class_t c) {
+//    printf("ID:%d\n", c.ID);
+//    printf("课程名称:%s\n", c.name);
+//    printf("类型:%s\n", c.type ? "选修" : "必修");
+//    printf("最大学生容量:%d\n", c.max_stu);
+//    printf("当前学生人数:%d\n", c.now_stu);
+//    printf("--------上课时间和地点------\n");
+//
+//    //printf("时间:")
+//    ClassResourceLink info = c.class_resource_link_head;
+//    resource_t *t;
+//    int i = 0;
+//    while (t = (resource_t *) (list_at(info, i))) {
+//        i++;
+//        printf("周%s第%d节 %s\n", week[t->day], t->rank, t->name);
+//    }
+//}
 
 
 //将课程信息存入磁盘 TODO:模式应该是写错了,要修正

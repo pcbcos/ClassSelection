@@ -135,7 +135,7 @@ void admin_lookover() {
                 s = student_list[get_index_by_ID(id, student_list)];
                 if (s.ID) {
                     sprintf(text, "ID:%d\t姓名:%s", s.ID, s.name);
-                    newtListboxAppendEntry(list, text, (int*)&id);
+                    newtListboxAppendEntry(list, text, (int *) &id);
                     memset(text, 0, 64);
                 }
             }
@@ -341,19 +341,35 @@ void admin_querry() {
                 newtFormDestroy(form2);
                 return;
             }
-            char text[128] = {0};
+            char text[512] = {0};
             student_t s;
-            class_t cc;
+            class_t C;
             teacher_t t;
+            pNode ct;
+            pNode cr;
             switch (type) {
                 case 0:
                     s = student_list[result[*u - 1]];
                     sprintf(text, "ID:%d,姓名:%s,性别:%lc,年龄:%d,学分%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age, s.credits);
                     break;
                 case 1:
-                    cc = class_list[result[*u - 1]];
-                    sprintf(text, "ID:%d,课程名称:%s,课程类型:%s,学分:%.1f,上课时间和地点:%s", cc.ID, cc.name, cc.type ? "选修" : "必修",
-                            cc.credits, "待完善");
+                    C = class_list[result[*u - 1]];
+                    ct = C.class_teacher_link_head->next;
+                    cr = C.class_resource_link_head->next;
+
+                    //渲染文本
+                    sprintf(text, "课程名称:%s(%s)\n", C.name, C.type ? "选修" : "必修");
+                    sprintf(text + strlen(text), "学分:%.1f\n", C.credits);
+                    sprintf(text + strlen(text), "教师:");
+                    for (pNode p = ct; p; p = p->next) {
+                        sprintf(text + strlen(text), "%s ", get_itemRef_by_ID<teacher_t>(p->targetID).name);
+                    }
+                    sprintf(text + strlen(text), "\n");
+                    sprintf(text + strlen(text), "时间地点:\n");
+                    for (pNode p = cr; p; p = p->next) {
+                        const resource_t &r = get_itemRef_by_ID<resource_t>(p->targetID);
+                        sprintf(text + strlen(text), "周%lc第%2d节\t%s\n", WEEK[r.day], r.rank, r.name);
+                    }
                     break;
                 case 2:
                     t = teacher_list[result[*u - 1]];
