@@ -585,7 +585,7 @@ void admin_modify() {
                     student_t &tomod = get_itemRef_by_ID<student_t>(s.ID);
                     memset(tomod.name,0,sizeof(tomod.name));
                     memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
-                    if (strstr("男", entry_text[1])) {
+                    if (strstr( entry_text[1],"男")) {
                         tomod.sex = false;
                     } else {
                         tomod.sex = true;
@@ -620,7 +620,7 @@ void admin_modify() {
                     class_t &tomod = get_itemRef_by_ID<class_t>(cc.ID);
                     memset(tomod.name,0,sizeof(tomod.name));
                     memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
-                    if(strstr("必",entry_text[1])){
+                    if(strstr(entry_text[1],"必")){
                         tomod.type=0;
                     }else{
                         tomod.type=1;
@@ -643,7 +643,7 @@ void admin_modify() {
                 t = teacher_list[result[*u - 1]];
                 //sprintf(text, "ID:%d\n姓名%s", t.ID, t.name);
             }
-            show_info_win(text);
+            //show_info_win(text);
         }
 
         //newtFormDestroy(form2);
