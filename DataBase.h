@@ -351,7 +351,7 @@ void del_entity(uint32_t id) {
         class_t &c = get_itemRef_by_ID<class_t>(p->targetID);
         list_del_entity(get_T_head<T>(c), id);
     }
-    list_del_all(get_T_head<T>(id));
+    list_del_all(get_T_head<T>(e));
     memset(&e,0,sizeof(T));
 }
 
