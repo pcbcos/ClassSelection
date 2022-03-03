@@ -611,8 +611,8 @@ void admin_modify() {
                 memset(entry_text, 0, sizeof(entry_text));
                 cc = class_list[result[*u - 1]];
                 sprintf(text, "原信息:\n");
-                sprintf(text + strlen(text), "ID:%d\n课程名称:%s\n课程类型:%s\n学分:%.1f\n上课时间和地点:%s", cc.ID, cc.name,
-                        cc.type ? "选修" : "必修", cc.credits, "这里不给你看");
+                sprintf(text + strlen(text), "ID:%d\n课程名称:%s\n课程类型:%s\n学分:%.1f\n上课时间和地点:%s\n", cc.ID, cc.name,
+                        cc.type ? "选修" : "必修", cc.credits, "这里不给你看,別的地方能查到的,我懒得写了");
                 rc = newtWinEntries("学生信息修改",
                                     text, 50, 5, 5, 20, entries, "提交修改",
                                     "删除", "取消", NULL);
