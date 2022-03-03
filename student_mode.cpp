@@ -44,6 +44,10 @@ void student_querry() {
     newtCls();
     newtRefresh();
     uint32_t index = get_index_by_ID(myID, student_list);
+    if (!index) {
+        show_warning_win("找不到您的个人信息");
+        return;
+    }
     student_t s = student_list[index];
     char text[512] = {0};
     wchar_t sex = s.sex ? L'女' : L'男';
@@ -65,7 +69,10 @@ void student_querry() {
 
 void student_modify() {
     auto &s = get_itemRef_by_ID<student_t>(myID);
-
+    if (s.ID == 0) {
+        show_warning_win("找不到您的个人信息");
+        return;
+    }
     newtCls();
     newtRefresh();
     newtCenteredWindow(50, 20, "学生选课");
@@ -175,7 +182,7 @@ void student_overlook() {
         newtListboxSetCurrent(list, (int) current);
         newtFormAddComponents(form2, list, NULL);
         newtRunForm(form2);
-        current = (uint32_t *) newtListboxGetCurrent(list) - index+1;
+        current = (uint32_t *) newtListboxGetCurrent(list) - index + 1;
         uint32_t result_id = *(uint32_t *) newtListboxGetCurrent(list);
         if (!result_id) {
             newtFormDestroy(form2);

@@ -350,7 +350,7 @@ void admin_querry() {
             switch (type) {
                 case 0:
                     s = student_list[result[*u - 1]];
-                    sprintf(text, "ID:%d\n姓名:%s\n性别:%lc\n年龄:%d\n学分%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age,
+                    sprintf(text, "ID:%d\n姓名:%s\n性别:%lc\n年龄:%d\n学分:%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age,
                             s.credits);
                     break;
                 case 1:
@@ -575,14 +575,28 @@ void admin_modify() {
                 };
                 memset(entry_text, 0, sizeof(entry_text));
                 s = student_list[result[*u - 1]];
-                sprintf(text,"原信息:\n");
-                sprintf(text+strlen(text), "ID:%d\n姓名:%s\n性别:%lc\n年龄:%d\n学分%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age, s.credits);
+                sprintf(text, "原信息:\n");
+                sprintf(text + strlen(text), "ID:%d\n姓名:%s\n性别:%lc\n年龄:%d\n学分:%d", s.ID, s.name, s.sex ? L'女' : L'男',
+                        s.age, s.credits);
                 rc = newtWinEntries("学生信息修改",
                                     text, 50, 5, 5, 20, entries, "提交修改",
-                                    "删除","取消", NULL);
-                if(rc==2){
-                    show_info_win("abab");
+                                    "删除", "取消", NULL);
+                if (rc == 1) {
+                    student_t &tomod = get_itemRef_by_ID<student_t>(s.ID);
+                    memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
+                    if (strstr("男", entry_text[1])) {
+                        tomod.sex = false;
+                    } else {
+                        tomod.sex = true;
+                    }
+                    tomod.age = atoi(entry_text[2]);
+                    tomod.credits = atoi(entry_text[3]);
+                    show_info_win("修改完成");
+                    break;
+                } else if (rc == 2) {
+
                     del_entity<student_t>(s.ID);
+                    show_info_win("已删除");
                     break;
                 }
 
@@ -596,7 +610,7 @@ void admin_modify() {
                 memset(entry_text, 0, sizeof(entry_text));
                 cc = class_list[result[*u - 1]];
                 //sprintf(text, "ID:%d,课程名称:%s,课程类型:%s,学分:%.1f,上课时间和地点:%s", cc.ID, cc.name, cc.type ? "选修" : "必修",
-                        //cc.credits, "待完善");
+                //cc.credits, "待完善");
             } else if (type == 2) {
                 newtWinEntry entries[] = {
                         {"姓名", entry_text + 0, 0},
