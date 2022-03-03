@@ -613,7 +613,7 @@ void admin_modify() {
                 sprintf(text, "原信息:\n");
                 sprintf(text + strlen(text), "ID:%d\n课程名称:%s\n课程类型:%s\n学分:%.1f\n上课时间和地点:%s\n", cc.ID, cc.name,
                         cc.type ? "选修" : "必修", cc.credits, "这里不给你看,別的地方能查到的,我懒得写了");
-                rc = newtWinEntries("学生信息修改",
+                rc = newtWinEntries("课程信息修改",
                                     text, 50, 5, 5, 20, entries, "提交修改",
                                     "删除", "取消", NULL);
                 if (rc == 1) {
@@ -636,11 +636,26 @@ void admin_modify() {
             } else if (type == 2) {
                 newtWinEntry entries[] = {
                         {"姓名", entry_text + 0, 0},
-                        {"性别", entry_text + 1, 0},
                         {NULL, NULL,           0}
                 };
                 memset(entry_text, 0, sizeof(entry_text));
                 t = teacher_list[result[*u - 1]];
+                sprintf(text, "原信息:\n");
+                sprintf(text + strlen(text), "ID:%d\n姓名:%s", t.ID, t.name);
+                rc = newtWinEntries("教师信息修改",
+                                    text, 50, 5, 5, 20, entries, "提交修改",
+                                    "删除", "取消", NULL);
+                if (rc == 1) {
+                    teacher_t &tomod = get_itemRef_by_ID<teacher_t>(t.ID);
+                    memset(tomod.name,0,sizeof(tomod.name));
+                    memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
+                    show_info_win("修改完成");
+                    break;
+                } else if (rc == 2) {
+                    del_entity<teacher_t>(t.ID);
+                    show_info_win("已删除");
+                    break;
+                }
                 //sprintf(text, "ID:%d\n姓名%s", t.ID, t.name);
             }
             //show_info_win(text);
