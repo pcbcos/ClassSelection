@@ -92,10 +92,18 @@ int main() {
 //        c1.credits=100.0;
 //        printf("%d\n", list_at(student_list[get_index_by_ID(19201022, student_list)].student_class_link_head, 1));
 //        printf("%lf",class_list[get_index_by_ID(94,class_list)].credits);
-    for (auto &r: resource_list) {
-        if (r.ID) {
-            printf("%d\n",r.ID);
-        }
+//    for (auto &r: resource_list) {
+//        if (r.ID) {
+//            printf("%d\n",r.ID);
+//        }
+//    }
+    pNode l= list_create(1);
+    for(int i=2;i<=10;i++) {
+        list_append(l, i);
+    }
+    list_del_entity(l,5);
+    for(pNode p=l;p;p=p->next) {
+        printf("%d\n",p->targetID);
     }
     DataBaseSave();
 #endif

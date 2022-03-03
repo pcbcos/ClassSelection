@@ -91,7 +91,7 @@ void list_del_same(pNode head) {
     }
 }
 
-void list_del_entity(pNode head,uint32 id){
+void list_del_entity(pNode head,uint32_t id){
     if(!head) return;
     pNode p1=head;
     pNode p2=head->next;

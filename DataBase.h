@@ -127,7 +127,6 @@ resource_t class_time_analysis(char *text_p1, char *text_p2);
 void printclassinfo(class_t c);
 
 
-
 void DataBaseInit();//数据库初始化
 void DataBaseSave();//数据库数据保存
 void show_warning_win(char *text);//显示错误信息
@@ -175,20 +174,22 @@ uint32_t get_index_by_ID(uint32_t ID, const T(&entity_list)[N]) {
         return 0;
     }
 }
+
 //template<typename T,std::size_t N>
 //auto& get_itemRef_by_ID(uint32_t ID,T(&entity_list)[N]){
 //    return entity_list[get_index_by_ID(ID,entity_list)];
 //}
-template<typename T> requires have_relation_with_class<T> || std::is_same_v<T,class_t>
-T& get_itemRef_by_ID(uint32_t ID){
-    if constexpr(std::is_same_v<T,student_t>){
-        return student_list[get_index_by_ID(ID,student_list)];
-    }else if constexpr(std::is_same_v<T,class_t>){
-        return class_list[get_index_by_ID(ID,class_list)];
-    }else if constexpr(std::is_same_v<T,resource_t>){
-        return resource_list[get_index_by_ID(ID,resource_list)];
-    } else{
-        return teacher_list[get_index_by_ID(ID,teacher_list)];
+template<typename T>
+requires have_relation_with_class<T> || std::is_same_v<T, class_t>
+T &get_itemRef_by_ID(uint32_t ID) {
+    if constexpr(std::is_same_v<T, student_t>) {
+        return student_list[get_index_by_ID(ID, student_list)];
+    } else if constexpr(std::is_same_v<T, class_t>) {
+        return class_list[get_index_by_ID(ID, class_list)];
+    } else if constexpr(std::is_same_v<T, resource_t>) {
+        return resource_list[get_index_by_ID(ID, resource_list)];
+    } else {
+        return teacher_list[get_index_by_ID(ID, teacher_list)];
     }
 }
 
@@ -268,7 +269,6 @@ constexpr decltype(auto) get_T_list() noexcept {
 }
 
 
-
 template<typename T>
 requires have_relation_with_class<T>
 auto get_T_head(class_t c) {
@@ -291,16 +291,18 @@ auto get_T_head(T e) {
     }
 }
 
-template<typename T,std::size_t N> requires std::is_same_v<T, resource_t>
-void addRelation(uint32_t class_id, uint32_t other_id,T(&entity_list)[N]) {
+template<typename T, std::size_t N>
+requires std::is_same_v<T, resource_t>
+void addRelation(uint32_t class_id, uint32_t other_id, T(&entity_list)[N]) {
     class_t c = class_list[get_index_by_ID(class_id, class_list)];
     T e = entity_list[get_index_by_ID(other_id, entity_list)];
     auto class_xxx_link_head = get_T_head<T>(c);
     list_append(class_xxx_link_head, other_id);
 }
 
-template<typename T,std::size_t N> requires  have_relation_with_class<T> && (!std::is_same_v<T, resource_t>)
-void addRelation(uint32_t class_id, uint32_t other_id,T(&entity_list)[N]) {
+template<typename T, std::size_t N>
+requires have_relation_with_class<T> && (!std::is_same_v<T, resource_t>)
+void addRelation(uint32_t class_id, uint32_t other_id, T(&entity_list)[N]) {
     class_t c = class_list[get_index_by_ID(class_id, class_list)];
     T e = entity_list[get_index_by_ID(other_id, entity_list)];
     auto class_xxx_link_head = get_T_head<T>(c);
@@ -309,25 +311,49 @@ void addRelation(uint32_t class_id, uint32_t other_id,T(&entity_list)[N]) {
     list_append(xxx_class_link_head, class_id);
 }
 
-template<typename T> requires std::is_same_v<T,class_t>
-void del_entity(uint32_t id){
-    uint32_t index=get_index_by_ID(id,class_list);
-    const class_t& c=get_itemRef_by_ID<T>(id);
-    pNode ct=c.class_teacher_link_head->next;
-    pNode cr=c.class_resource_link_head->next;
-    pNode cs=c.class_student_link_head->next;
-    for(pNode p=ct;p;p=p->next){
-        teacher_t& t= get_itemRef_by_ID<teacher_t>(p->targetID);
-        list_del_item(t.teacher_class_link_head,id);
+template<typename T>
+requires std::is_same_v<T, class_t>
+void del_entity(uint32_t id) {
+    uint32_t index = get_index_by_ID(id, class_list);
+    if (!index) return;
+    const class_t &c = get_itemRef_by_ID<T>(id);
+    pNode ct = c.class_teacher_link_head->next;
+    pNode cs = c.class_student_link_head->next;
+    for (pNode p = ct; p; p = p->next) {
+        teacher_t &t = get_itemRef_by_ID<teacher_t>(p->targetID);
+        list_del_entity(t.teacher_class_link_head, id);
     }
-    for(pNode p=cs;p;p=p->next){
-        student_t& s=get_itemRef_by_ID<student_t>(p->targetID);
-        list_del_item(s.student_class_link_head,id);
+    for (pNode p = cs; p; p = p->next) {
+        student_t &s = get_itemRef_by_ID<student_t>(p->targetID);
+        list_del_entity(s.student_class_link_head, id);
     }
-
-
-
-
-
+    list_del_all(c.class_student_link_head);
+    list_del_all(c.class_resource_link_head);
+    list_del_all(c.class_teacher_link_head);
+    memset(class_list + index, 0, sizeof(class_t));
 }
+
+template<typename T>
+requires have_relation_with_class<T> && (!std::is_same_v<T, resource_t>)
+void del_entity(uint32_t id) {
+    uint32_t index = 0;
+    T &e = get_itemRef_by_ID<T>(id);
+    pNode ec;
+    if constexpr(std::is_same_v<T, student_t>) {
+        index = get_index_by_ID(id, student_list);
+        ec = e.student_class_link_head;
+    } else if constexpr(std::is_same_v<T, teacher_t>) {
+        index = get_index_by_ID(id, teacher_list);
+        ec = e.teacher_class_link_head;
+    }
+    if (!index) return;
+    for (pNode p = ec->next; p; p = p->next) {
+        class_t &c = get_itemRef_by_ID<class_t>(p->targetID);
+        list_del_entity(get_T_head<T>(c), id);
+    }
+    list_del_all(get_T_head<T>(id));
+    memset(&e,0,sizeof(T));
+}
+
+
 #endif //CLASSSELECTION_DATABASE_H
