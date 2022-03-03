@@ -551,6 +551,29 @@ void save_resource_data() {
     fclose(fp);
 }
 
-void save_relation() {}
+void save_relation() {
+    FILE *fp = fopen("../test_data_gen/relations.txt", "w");
+    uint32_t start_id = get_min_ID(class_list);
+    uint32_t end_id = get_max_ID(class_list);
+    for (uint32_t id = start_id; id <= end_id; id++) {
+        const class_t &c = get_itemRef_by_ID<class_t>(id);
+        if (c.ID) {
+            pNode ct = c.class_teacher_link_head->next;
+            pNode cr = c.class_resource_link_head->next;
+            pNode cs = c.class_student_link_head->next;
+            for (pNode p = ct; p; p = p->next) {
+                fprintf(fp, "ct:%d-%d\n", c.ID, p->targetID);
+            }
+            for (pNode p = cr; p; p = p->next) {
+                fprintf(fp, "cr:%d-%d\n", c.ID, p->targetID);
+            }
+            for (pNode p = cs; p; p = p->next) {
+                fprintf(fp, "cs:%d-%d\n", c.ID, p->targetID);
+            }
+        }
+    }
+    fclose(fp);
+
+}
 
 #pragma clang diagnostic pop
