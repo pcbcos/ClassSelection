@@ -309,4 +309,25 @@ void addRelation(uint32_t class_id, uint32_t other_id,T(&entity_list)[N]) {
     list_append(xxx_class_link_head, class_id);
 }
 
+template<typename T> requires std::is_same_v<T,class_t>
+void del_entity(uint32_t id){
+    uint32_t index=get_index_by_ID(id,class_list);
+    const class_t& c=get_itemRef_by_ID<T>(id);
+    pNode ct=c.class_teacher_link_head->next;
+    pNode cr=c.class_resource_link_head->next;
+    pNode cs=c.class_student_link_head->next;
+    for(pNode p=ct;p;p=p->next){
+        teacher_t& t= get_itemRef_by_ID<teacher_t>(p->targetID);
+        list_del_item(t.teacher_class_link_head,id);
+    }
+    for(pNode p=cs;p;p=p->next){
+        student_t& s=get_itemRef_by_ID<student_t>(p->targetID);
+        list_del_item(s.student_class_link_head,id);
+    }
+
+
+
+
+
+}
 #endif //CLASSSELECTION_DATABASE_H

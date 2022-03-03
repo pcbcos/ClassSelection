@@ -91,4 +91,20 @@ void list_del_same(pNode head) {
     }
 }
 
+void list_del_entity(pNode head,uint32 id){
+    if(!head) return;
+    pNode p1=head;
+    pNode p2=head->next;
+    while(p2){
+        if(p2->targetID==id){
+            p1->next=p2->next;
+            free(p2);
+            break;
+        }else{
+            p1=p2;
+            p2=p2->next;
+        }
+    }
+}
+
 #pragma clang diagnostic pop
