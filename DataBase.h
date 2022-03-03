@@ -294,6 +294,7 @@ auto get_T_head(T e) {
 template<typename T, std::size_t N>
 requires std::is_same_v<T, resource_t>
 void addRelation(uint32_t class_id, uint32_t other_id, T(&entity_list)[N]) {
+    if(!(get_itemRef_by_ID<class_t>(class_id).ID && get_itemRef_by_ID<T>(other_id).ID)) return;
     class_t c = class_list[get_index_by_ID(class_id, class_list)];
     T e = entity_list[get_index_by_ID(other_id, entity_list)];
     auto class_xxx_link_head = get_T_head<T>(c);
@@ -303,6 +304,7 @@ void addRelation(uint32_t class_id, uint32_t other_id, T(&entity_list)[N]) {
 template<typename T, std::size_t N>
 requires have_relation_with_class<T> && (!std::is_same_v<T, resource_t>)
 void addRelation(uint32_t class_id, uint32_t other_id, T(&entity_list)[N]) {
+    if(!(get_itemRef_by_ID<class_t>(class_id).ID && get_itemRef_by_ID<T>(other_id).ID)) return;
     class_t c = class_list[get_index_by_ID(class_id, class_list)];
     T e = entity_list[get_index_by_ID(other_id, entity_list)];
     auto class_xxx_link_head = get_T_head<T>(c);

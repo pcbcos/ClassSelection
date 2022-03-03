@@ -583,6 +583,7 @@ void admin_modify() {
                                     "删除", "取消", NULL);
                 if (rc == 1) {
                     student_t &tomod = get_itemRef_by_ID<student_t>(s.ID);
+                    memset(tomod.name,0,sizeof(tomod.name));
                     memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
                     if (strstr("男", entry_text[1])) {
                         tomod.sex = false;
@@ -590,7 +591,7 @@ void admin_modify() {
                         tomod.sex = true;
                     }
                     tomod.age = atoi(entry_text[2]);
-                    tomod.credits = atoi(entry_text[3]);
+                    sscanf(entry_text[3],"%c",&tomod.credits);
                     show_info_win("修改完成");
                     break;
                 } else if (rc == 2) {
@@ -609,8 +610,29 @@ void admin_modify() {
                 };
                 memset(entry_text, 0, sizeof(entry_text));
                 cc = class_list[result[*u - 1]];
-                //sprintf(text, "ID:%d,课程名称:%s,课程类型:%s,学分:%.1f,上课时间和地点:%s", cc.ID, cc.name, cc.type ? "选修" : "必修",
-                //cc.credits, "待完善");
+                sprintf(text, "原信息:\n");
+                sprintf(text + strlen(text), "ID:%d\n课程名称:%s\n课程类型:%s\n学分:%.1f\n上课时间和地点:%s", cc.ID, cc.name,
+                        cc.type ? "选修" : "必修", cc.credits, "这里不给你看");
+                rc = newtWinEntries("学生信息修改",
+                                    text, 50, 5, 5, 20, entries, "提交修改",
+                                    "删除", "取消", NULL);
+                if (rc == 1) {
+                    class_t &tomod = get_itemRef_by_ID<class_t>(cc.ID);
+                    memset(tomod.name,0,sizeof(tomod.name));
+                    memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
+                    if(strstr("必",entry_text[1])){
+                        tomod.type=0;
+                    }else{
+                        tomod.type=1;
+                    }
+                    sscanf(entry_text[2],"%f",&tomod.credits);
+                } else if (rc == 2) {
+
+                    del_entity<class_t>(cc.ID);
+                    show_info_win("已删除");
+                    break;
+                }
+
             } else if (type == 2) {
                 newtWinEntry entries[] = {
                         {"姓名", entry_text + 0, 0},
