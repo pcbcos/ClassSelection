@@ -135,7 +135,30 @@ void student_modify() {
         for (int i = 0; i < numselected; i++) {
             selected_id[i] = *((uint32_t *) ptr++);
         }
-        policy_check(selected_id);
+        if(!policy_check(selected_id)){
+//            for(uint32_t id=start_id;id<=end_id;id++){
+//                class_t& c= get_itemRef_by_ID<class_t>(id);
+//                if(c.ID){
+//                    uint32_t* p;
+//                    for(p=selected_id;*p;p++){
+//                        if(*p==id){
+//                            addRelation(id,myID,student_list);
+//                            break;
+//                        }
+//                    }
+//                    if(!*p){
+//                        list_del_entity(c.class_student_link_head,myID);
+//                        list_del_entity(get_itemRef_by_ID<student_t>(myID).student_class_link_head,id);
+//                    }
+//                }
+//            }
+            pNode newhead= list_create(0);
+            for(uint32_t* p=selected_id;*p;p++){
+                list_append(newhead,*p);
+            }
+            list_del_all(get_itemRef_by_ID<student_t>(myID).student_class_link_head);
+            get_itemRef_by_ID<student_t>(myID).student_class_link_head=newhead;
+        }
 
 
     } else {
@@ -244,7 +267,7 @@ int policy_check(uint32_t *select_id) {
             credits += get_itemRef_by_ID<class_t>(id).credits;
         }
     }
-    if (credits < 18) {
+    if (credits < 10) {
         show_warning_win("学分没选够!");
         return 1;
     }
@@ -257,11 +280,13 @@ int policy_check(uint32_t *select_id) {
                 for(pNode r2=head2;r2;r2=r2->next){
                     if(resource_cmp(get_itemRef_by_ID<resource_t>(r1->targetID),get_itemRef_by_ID<resource_t>(r2->targetID))==0){
                         show_warning_win("有时间冲突，自己查一下");
+                        return 1;
                     }
                 }
             }
         }
     }
+    return 0;
 }
 
 #pragma clang diagnostic pop
