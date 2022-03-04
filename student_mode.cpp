@@ -244,10 +244,19 @@ int policy_check(uint32_t *select_id) {
                 credits += get_itemRef_by_ID<class_t>(id).credits;
             }
         } else {
-            credits += get_itemRef_by_ID<class_t>(id).credits;
+            uint32_t *p;
+            for (p = select_id; *p; p++) {
+                if (*p != id) {
+                    continue;
+                } else {
+                    credits += get_itemRef_by_ID<class_t>(id).credits;
+                    break;
+                }
+            }
+            //credits += get_itemRef_by_ID<class_t>(id).credits;
         }
     }
-    if (credits < 10) {
+    if (credits < 28) {
         show_warning_win("学分没选够!");
         return 1;
     }

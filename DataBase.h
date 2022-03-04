@@ -80,8 +80,8 @@ struct class_t {
     uint8_t type{0}; //0为必修课，1为选修课
     float credits{0};
     //TeacherInfo teachers;  //只存教师的ID,避免老师重名
-    uint16_t max_stu{0};
-    uint16_t now_stu{0};
+    uint16_t max_stu{50};
+    uint16_t now_stu{0}; //暂不使用
 
     ClassResourceLink class_resource_link_head{0};
     ClassTeacherLink class_teacher_link_head{0};

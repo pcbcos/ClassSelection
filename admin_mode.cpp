@@ -350,7 +350,7 @@ void admin_querry() {
             switch (type) {
                 case 0:
                     s = student_list[result[*u - 1]];
-                    sprintf(text, "ID:%d\n姓名:%s\n性别:%lc\n年龄:%d\n学分:%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age,
+                    sprintf(text, "ID:%d\n姓名:%s\n性别:%lc\n年龄:%d\n已获得学分:%d", s.ID, s.name, s.sex ? L'女' : L'男', s.age,
                             s.credits);
                     break;
                 case 1:
@@ -569,13 +569,13 @@ void admin_modify() {
                         {"姓名", entry_text + 0, 0},
                         {"性别", entry_text + 1, 0},
                         {"年龄", entry_text + 2, 0},
-                        {"学分", entry_text + 3, 0},
+                        {"已获得学分", entry_text + 3, 0},
                         {NULL, NULL,           0}
                 };
                 memset(entry_text, 0, sizeof(entry_text));
                 s = student_list[result[*u - 1]];
                 sprintf(text, "原信息:\n");
-                sprintf(text + strlen(text), "ID:%d\n姓名:%s\n性别:%lc\n年龄:%d\n学分:%d", s.ID, s.name, s.sex ? L'女' : L'男',
+                sprintf(text + strlen(text), "ID:%d\n姓名:%s\n性别:%lc\n年龄:%d\n已获得学分:%d", s.ID, s.name, s.sex ? L'女' : L'男',
                         s.age, s.credits);
                 rc = newtWinEntries("学生信息修改",
                                     text, 50, 5, 5, 20, entries, "提交修改",
@@ -721,7 +721,8 @@ void admin_addentity() {
                             "请输入学生信息", 64, 5, 5, 32, entries, "提交",
                             "取消", NULL);
         if (rc == 1) {
-            if (strlen(entry_text[0]) && strlen(entry_text[1]) && strlen(entry_text[2]) && strlen(entry_text[4])) {
+            if (strlen(entry_text[0]) && strlen(entry_text[1]) && strlen(entry_text[2]) && strlen(entry_text[3]) &&
+                strlen(entry_text[4])) {
                 student_t ss{};
                 ss.ID = atoi(entry_text[0]);
                 memcpy(ss.name, entry_text[1], strlen(entry_text[1]));
@@ -766,12 +767,64 @@ void admin_addentity() {
             goto start;
         }
     } else if (*u == 2) {
-
+        char *entry_text[8];
+        int rc;
+        newtWinEntry entries[] = {
+                {"ID*",   entry_text + 0, 0},
+                {"课程名称*", entry_text + 1, 0},
+                {"学分*",   entry_text + 2, 0},
+                {"类型*",   entry_text + 3, 0},
+                {NULL, NULL,              0}
+        };
+        memset(entry_text, 0, sizeof(entry_text));
+        rc = newtWinEntries("添加课程",
+                            "请输入课程基本信息(暂不支持设置时间地点)", 64, 5, 5, 32, entries, "提交",
+                            "取消", NULL);
+        if (rc == 1) {
+            if (strlen(entry_text[0]) && strlen(entry_text[1]) && strlen(entry_text[2]) && strlen(entry_text[3])) {
+                class_t newC{};
+                newC.ID = atoi(entry_text[0]);
+                memcpy(newC.name, entry_text[1], strlen(entry_text[1]));
+                sscanf(entry_text[2], "%f", &newC.credits);
+                newC.type=strstr(entry_text[3],"必")?0:1;
+                newC.class_student_link_head = list_create(0);
+                newC.class_resource_link_head = list_create(0);
+                newC.class_teacher_link_head = list_create(0);
+                uint32_t hID = newC.ID;
+                if (get_itemRef_by_ID<class_t>(newC.ID).ID) {
+                    show_warning_win("ID重复");
+                }
+                uint8_t hash_count = 0;
+                do {
+                    hID = hashID(hID, MAX_CLASS_NUM);
+                    hash_count++;
+                } while (class_list[hID].ID != 0 && hash_count < MAX_HASH_TIME);
+                if (class_list[hID].ID == 0) {
+                    class_list[hID] = newC;
+                    class_num++;
+                    show_info_win("完成");
+                } else {
+                    char waring_text[64] = {0};
+                    sprintf(waring_text, "ID=%d hash冲突%d次,加入失败", newC.ID, MAX_HASH_TIME);
+                    show_warning_win(waring_text);
+                }
+            } else {
+                show_warning_win("四项均为必填项");
+            }
+        } else {
+            show_info_win("用户取消操作");
+            newtFormDestroy(form);
+            newtCls();
+            goto start;
+        }
     } else if (*u == 3) {
-
+        show_info_win("此功能暂未开放");
+        goto start;
     } else {
         newtFormDestroy(form);
         newtCls();
         return;
     }
+    newtFormDestroy(form);
+    newtCls();
 }
