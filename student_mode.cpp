@@ -138,6 +138,16 @@ void student_modify() {
                 list_append(newhead, *p);
                 addRelation(*p,myID,student_list);
             }
+            for(uint32_t id=start_id;id<=end_id;id++){
+                if(get_itemRef_by_ID<class_t>(id).ID==0) continue;
+                uint32_t *p;
+                for(p=selected_id;*p;p++){
+                    if(*p==id) break;
+                }
+                if(*p==0){
+                    list_del_entity(get_itemRef_by_ID<class_t>(id).class_student_link_head,myID);
+                }
+            }
             list_del_all(get_itemRef_by_ID<student_t>(myID).student_class_link_head);
             get_itemRef_by_ID<student_t>(myID).student_class_link_head = newhead;
             show_info_win("成功");
