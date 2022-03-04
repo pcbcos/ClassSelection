@@ -58,7 +58,7 @@ void student_querry() {
         myclass = myclass->next;
     }
     newtComponent form, t, button;
-    t = newtTextboxReflowed(1, 1, text, 30, 5, 5, 0);
+    t = newtTextboxReflowed(1, 1, text, 64, 5, 5, 0);
     newtCenteredWindow(100, 20, "学生信息");
     button = newtButton(45, 16, "返回");
     form = newtForm(NULL, NULL, 0);
@@ -129,43 +129,23 @@ void student_modify() {
     if (answer == button1) {
         result = newtCheckboxTreeGetSelection(checkboxTree, &numselected);
         ptr = result;
-        //char text[32]{};
-        //sprintf(text, "%d", numselected);
-        //show_info_win(text);
         for (int i = 0; i < numselected; i++) {
             selected_id[i] = *((uint32_t *) ptr++);
         }
-        if(!policy_check(selected_id)){
-//            for(uint32_t id=start_id;id<=end_id;id++){
-//                class_t& c= get_itemRef_by_ID<class_t>(id);
-//                if(c.ID){
-//                    uint32_t* p;
-//                    for(p=selected_id;*p;p++){
-//                        if(*p==id){
-//                            addRelation(id,myID,student_list);
-//                            break;
-//                        }
-//                    }
-//                    if(!*p){
-//                        list_del_entity(c.class_student_link_head,myID);
-//                        list_del_entity(get_itemRef_by_ID<student_t>(myID).student_class_link_head,id);
-//                    }
-//                }
-//            }
-            pNode newhead= list_create(0);
-            for(uint32_t* p=selected_id;*p;p++){
-                list_append(newhead,*p);
+        if (!policy_check(selected_id)) {
+            pNode newhead = list_create(0);
+            for (uint32_t *p = selected_id; *p; p++) {
+                list_append(newhead, *p);
             }
             list_del_all(get_itemRef_by_ID<student_t>(myID).student_class_link_head);
-            get_itemRef_by_ID<student_t>(myID).student_class_link_head=newhead;
+            get_itemRef_by_ID<student_t>(myID).student_class_link_head = newhead;
+            show_info_win("成功");
         }
-
-
     } else {
         char text[32]{};
         show_info_win("您已取消");
     }
-
+    newtFormDestroy(form);
 
 }
 
@@ -272,13 +252,14 @@ int policy_check(uint32_t *select_id) {
         return 1;
     }
     //时间冲突检查
-    for (uint32_t* p1=select_id;*p1;p1++){
-        pNode head1= get_itemRef_by_ID<class_t>(*p1).class_resource_link_head->next;
-        for(uint32_t* p2=p1+1;*p2;p2++){
-            pNode head2= get_itemRef_by_ID<class_t>(*p2).class_resource_link_head->next;
-            for(pNode r1=head1;r1;r1=r1->next){
-                for(pNode r2=head2;r2;r2=r2->next){
-                    if(resource_cmp(get_itemRef_by_ID<resource_t>(r1->targetID),get_itemRef_by_ID<resource_t>(r2->targetID))==0){
+    for (uint32_t *p1 = select_id; *p1; p1++) {
+        pNode head1 = get_itemRef_by_ID<class_t>(*p1).class_resource_link_head->next;
+        for (uint32_t *p2 = p1 + 1; *p2; p2++) {
+            pNode head2 = get_itemRef_by_ID<class_t>(*p2).class_resource_link_head->next;
+            for (pNode r1 = head1; r1; r1 = r1->next) {
+                for (pNode r2 = head2; r2; r2 = r2->next) {
+                    if (resource_cmp(get_itemRef_by_ID<resource_t>(r1->targetID),
+                                     get_itemRef_by_ID<resource_t>(r2->targetID)) == 0) {
                         show_warning_win("有时间冲突，自己查一下");
                         return 1;
                     }

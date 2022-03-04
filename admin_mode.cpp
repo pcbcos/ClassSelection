@@ -341,7 +341,7 @@ void admin_querry() {
                 newtFormDestroy(form2);
                 return;
             }
-            char text[512] = {0};
+            char text[1024] = {0};
             student_t s;
             class_t C;
             teacher_t t;
@@ -381,8 +381,6 @@ void admin_querry() {
             newtFormDestroy(form2);
             newtRefresh();
         }
-
-
     } else {
         show_warning_win("无输入");
     }
@@ -566,6 +564,7 @@ void admin_modify() {
             char *entry_text[8];
             int rc;
             if (type == 0) {
+                newtPushHelpLine("空输入代表原有值");
                 newtWinEntry entries[] = {
                         {"姓名", entry_text + 0, 0},
                         {"性别", entry_text + 1, 0},
@@ -583,15 +582,23 @@ void admin_modify() {
                                     "删除", "取消", NULL);
                 if (rc == 1) {
                     student_t &tomod = get_itemRef_by_ID<student_t>(s.ID);
-                    memset(tomod.name,0,sizeof(tomod.name));
-                    memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
-                    if (strstr( entry_text[1],"男")) {
-                        tomod.sex = false;
-                    } else {
-                        tomod.sex = true;
+                    if (strlen(entry_text[0])) {
+                        memset(tomod.name, 0, sizeof(tomod.name));
+                        memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
                     }
-                    tomod.age = atoi(entry_text[2]);
-                    sscanf(entry_text[3],"%c",&tomod.credits);
+                    if (strlen(entry_text[1])) {
+                        if (strstr(entry_text[1], "男")) {
+                            tomod.sex = false;
+                        } else {
+                            tomod.sex = true;
+                        }
+                    }
+                    if (strlen(entry_text[2])) {
+                        tomod.age = atoi(entry_text[2]);
+                    }
+                    if (strlen(entry_text[3])) {
+                        sscanf(entry_text[3], "%c", &tomod.credits);
+                    }
                     show_info_win("修改完成");
                     break;
                 } else if (rc == 2) {
@@ -605,8 +612,8 @@ void admin_modify() {
                 newtWinEntry entries[] = {
                         {"课程名称", entry_text + 0, 0},
                         {"课程类型", entry_text + 1, 0},
-                        {"学分", entry_text + 2, 0},
-                        {NULL, NULL, 0}
+                        {"学分",   entry_text + 2, 0},
+                        {NULL, NULL,             0}
                 };
                 memset(entry_text, 0, sizeof(entry_text));
                 cc = class_list[result[*u - 1]];
@@ -618,14 +625,21 @@ void admin_modify() {
                                     "删除", "取消", NULL);
                 if (rc == 1) {
                     class_t &tomod = get_itemRef_by_ID<class_t>(cc.ID);
-                    memset(tomod.name,0,sizeof(tomod.name));
-                    memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
-                    if(strstr(entry_text[1],"必")){
-                        tomod.type=0;
-                    }else{
-                        tomod.type=1;
+                    if (strlen(entry_text[0])) {
+                        memset(tomod.name, 0, sizeof(tomod.name));
+                        memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
                     }
-                    sscanf(entry_text[2],"%f",&tomod.credits);
+                    if (strlen(entry_text[1])) {
+                        if (strstr(entry_text[1], "必")) {
+                            tomod.type = 0;
+                        } else {
+                            tomod.type = 1;
+                        }
+                    }
+                    if (strlen(entry_text[2])) {
+                        sscanf(entry_text[2], "%f", &tomod.credits);
+                    }
+
                 } else if (rc == 2) {
 
                     del_entity<class_t>(cc.ID);
@@ -647,8 +661,10 @@ void admin_modify() {
                                     "删除", "取消", NULL);
                 if (rc == 1) {
                     teacher_t &tomod = get_itemRef_by_ID<teacher_t>(t.ID);
-                    memset(tomod.name,0,sizeof(tomod.name));
-                    memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
+                    if (strlen(entry_text[0])) {
+                        memset(tomod.name, 0, sizeof(tomod.name));
+                        memcpy(tomod.name, entry_text[0], strlen(entry_text[0]));
+                    }
                     show_info_win("修改完成");
                     break;
                 } else if (rc == 2) {
