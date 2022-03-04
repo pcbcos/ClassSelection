@@ -10,3 +10,5 @@ test_data_gen/__pycache__/
 /build/
 /Release/
 /cmake-build-debug-gcc/
+/release/
+/debug/
