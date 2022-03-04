@@ -136,6 +136,7 @@ void student_modify() {
             pNode newhead = list_create(0);
             for (uint32_t *p = selected_id; *p; p++) {
                 list_append(newhead, *p);
+                addRelation(*p,myID,student_list);
             }
             list_del_all(get_itemRef_by_ID<student_t>(myID).student_class_link_head);
             get_itemRef_by_ID<student_t>(myID).student_class_link_head = newhead;
@@ -146,6 +147,7 @@ void student_modify() {
         show_info_win("您已取消");
     }
     newtFormDestroy(form);
+
 
 }
 

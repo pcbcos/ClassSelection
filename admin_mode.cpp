@@ -384,8 +384,10 @@ void admin_querry() {
     } else {
         show_warning_win("无输入");
     }
-    newtRefresh();
+
     newtFormDestroy(form);
+    newtRefresh();
+
 }
 
 void admin_modify() {
@@ -554,7 +556,7 @@ void admin_modify() {
                 if (result) {
                     free(result);
                 }
-                newtFormDestroy(form2);
+                //newtFormDestroy(form2);
                 break;
             }
             char text[512] = {0};
@@ -677,14 +679,14 @@ void admin_modify() {
             //show_info_win(text);
         }
 
-        //newtFormDestroy(form2);
+        newtFormDestroy(form2);
         newtRefresh();
 
     } else {
         show_warning_win("无输入");
     }
-    newtRefresh();
     newtFormDestroy(form);
+    newtRefresh();
 }
 
 void admin_addentity() {
@@ -820,11 +822,8 @@ void admin_addentity() {
     } else if (*u == 3) {
         show_info_win("此功能暂未开放");
         goto start;
-    } else {
-        newtFormDestroy(form);
-        newtCls();
-        return;
     }
     newtFormDestroy(form);
+    newtRefresh();
     newtCls();
 }
