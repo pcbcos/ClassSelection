@@ -568,11 +568,11 @@ void admin_modify() {
             if (type == 0) {
                 newtPushHelpLine("空输入代表原有值");
                 newtWinEntry entries[] = {
-                        {"姓名", entry_text + 0, 0},
-                        {"性别", entry_text + 1, 0},
-                        {"年龄", entry_text + 2, 0},
+                        {"姓名",    entry_text + 0, 0},
+                        {"性别",    entry_text + 1, 0},
+                        {"年龄",    entry_text + 2, 0},
                         {"已获得学分", entry_text + 3, 0},
-                        {NULL, NULL,           0}
+                        {NULL, NULL,              0}
                 };
                 memset(entry_text, 0, sizeof(entry_text));
                 s = student_list[result[*u - 1]];
@@ -735,28 +735,29 @@ void admin_addentity() {
                 uint32_t hID = ss.ID;
                 if (get_itemRef_by_ID<student_t>(ss.ID).ID) {
                     show_warning_win("ID重复");
-                }
-                uint8_t hash_count = 0;
-                do {
-                    hID = hashID(hID, MAX_STUDENT_NUM);
-                    hash_count++;
-                } while (student_list[hID].ID != 0 && hash_count < MAX_HASH_TIME);
-                if (student_list[hID].ID == 0) {
-                    student_list[hID] = ss;
-                    student_num++;
-                    show_info_win("完成");
                 } else {
-                    char waring_text[64] = {0};
-                    sprintf(waring_text, "ID=%d hash冲突%d次,加入失败", ss.ID, MAX_HASH_TIME);
-                    show_warning_win(waring_text);
-                }
-                if (strlen(entry_text[5])) {
-                    char temp[128]{};
-                    strcpy(temp, entry_text[5]);
-                    char *token = strtok(temp, " ");
-                    while (token) {
-                        addRelation<student_t>(atoi(token), ss.ID, student_list);
-                        token = strtok(NULL, " ");
+                    uint8_t hash_count = 0;
+                    do {
+                        hID = hashID(hID, MAX_STUDENT_NUM);
+                        hash_count++;
+                    } while (student_list[hID].ID != 0 && hash_count < MAX_HASH_TIME);
+                    if (student_list[hID].ID == 0) {
+                        student_list[hID] = ss;
+                        student_num++;
+                        show_info_win("完成");
+                    } else {
+                        char waring_text[64] = {0};
+                        sprintf(waring_text, "ID=%d hash冲突%d次,加入失败", ss.ID, MAX_HASH_TIME);
+                        show_warning_win(waring_text);
+                    }
+                    if (strlen(entry_text[5])) {
+                        char temp[128]{};
+                        strcpy(temp, entry_text[5]);
+                        char *token = strtok(temp, " ");
+                        while (token) {
+                            addRelation<student_t>(atoi(token), ss.ID, student_list);
+                            token = strtok(NULL, " ");
+                        }
                     }
                 }
             } else {
@@ -788,28 +789,30 @@ void admin_addentity() {
                 newC.ID = atoi(entry_text[0]);
                 memcpy(newC.name, entry_text[1], strlen(entry_text[1]));
                 sscanf(entry_text[2], "%f", &newC.credits);
-                newC.type=strstr(entry_text[3],"必")?0:1;
+                newC.type = strstr(entry_text[3], "必") ? 0 : 1;
                 newC.class_student_link_head = list_create(0);
                 newC.class_resource_link_head = list_create(0);
                 newC.class_teacher_link_head = list_create(0);
                 uint32_t hID = newC.ID;
                 if (get_itemRef_by_ID<class_t>(newC.ID).ID) {
                     show_warning_win("ID重复");
-                }
-                uint8_t hash_count = 0;
-                do {
-                    hID = hashID(hID, MAX_CLASS_NUM);
-                    hash_count++;
-                } while (class_list[hID].ID != 0 && hash_count < MAX_HASH_TIME);
-                if (class_list[hID].ID == 0) {
-                    class_list[hID] = newC;
-                    class_num++;
-                    show_info_win("完成");
                 } else {
-                    char waring_text[64] = {0};
-                    sprintf(waring_text, "ID=%d hash冲突%d次,加入失败", newC.ID, MAX_HASH_TIME);
-                    show_warning_win(waring_text);
+                    uint8_t hash_count = 0;
+                    do {
+                        hID = hashID(hID, MAX_CLASS_NUM);
+                        hash_count++;
+                    } while (class_list[hID].ID != 0 && hash_count < MAX_HASH_TIME);
+                    if (class_list[hID].ID == 0) {
+                        class_list[hID] = newC;
+                        class_num++;
+                        show_info_win("完成");
+                    } else {
+                        char waring_text[64] = {0};
+                        sprintf(waring_text, "ID=%d hash冲突%d次,加入失败", newC.ID, MAX_HASH_TIME);
+                        show_warning_win(waring_text);
+                    }
                 }
+
             } else {
                 show_warning_win("四项均为必填项");
             }

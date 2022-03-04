@@ -4,10 +4,12 @@
 #include "main.h"
 
 uint32_t myID;
+uint8_t isLogined=0;
 const wchar_t WEEK[7] = {L'日', L'一', L'二', L'三', L'四', L'五', L'六'};
 
 void login() {
     //newtInit();
+    if(isLogined) return;
     newtCls();
     newtRefresh();
     newtCenteredWindow(100, 10, "请输入帐号密码");
@@ -33,6 +35,7 @@ void login() {
     if (strcmp(passwd, "kalium1910") == 0) {
         newtRefresh();
         newtFormDestroy(form);
+        isLogined=1;
         return;
     } else {
         newtFinished();
@@ -44,6 +47,7 @@ void login() {
 int main() {
     DataBaseInit();
 #if TEST_MENU
+    UISTART:
     newtInit();
     newtSetSuspendCallback(callback, NULL);
     login();
@@ -57,7 +61,9 @@ int main() {
         list = newtListbox(18, 3, 5, NEWT_FLAG_RETURNEXIT);
         newtListboxAppendEntry(list, "学生模式", &p);
         newtListboxAppendEntry(list, "管理员模式", &q);
+        newtListboxAppendEntry(list, "重置UI", &r);
         newtListboxAppendEntry(list, "退出系统", &s);
+
         newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
         fm = newtForm(NULL, NULL, 0);
         newtFormAddComponents(fm, list, NULL);
@@ -78,6 +84,12 @@ int main() {
                 DataBaseSave();
                 printf("Saved!\n");
                 exit(0);
+            case 3:
+                newtCls();
+                newtRefresh();
+                newtFinished();
+                goto UISTART;
+                break;
         }
     } while (1);
 #else
