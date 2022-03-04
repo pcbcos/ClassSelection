@@ -5,6 +5,7 @@
 #ifndef CLASSSELECTION_ADMIN_MODE_H
 #define CLASSSELECTION_ADMIN_MODE_H
 #include "main.h"
+#include "inttypes.h"
 
 void admin_mode();
 

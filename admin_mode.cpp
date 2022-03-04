@@ -597,7 +597,7 @@ void admin_modify() {
                         tomod.age = atoi(entry_text[2]);
                     }
                     if (strlen(entry_text[3])) {
-                        sscanf(entry_text[3], "%c", &tomod.credits);
+                        sscanf(entry_text[3], "%" SCNu8, &tomod.credits);
                     }
                     show_info_win("修改完成");
                     break;
