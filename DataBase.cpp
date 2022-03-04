@@ -573,7 +573,19 @@ void save_relation() {
         }
     }
     fclose(fp);
+}
 
+int resource_cmp(const resource_t &r1, const resource_t &r2) { //相同返回0
+    if (r1.day == r2.day && r1.rank == r2.rank) {
+        if (strcmp(r1.name, r2.name) == 0) {
+            if (!((r1.last_week < r2.first_week) || (r2.last_week < r1.first_week))) {
+                if (r1.odd_even == r2.odd_even) {
+                    return 0;
+                }
+            }
+        }
+    }
+    return 1;
 }
 
 #pragma clang diagnostic pop

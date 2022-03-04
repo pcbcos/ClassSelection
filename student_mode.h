@@ -14,5 +14,5 @@ void student_querry();
 void student_modify();
 
 void student_overlook();
-void policy_check(uint32_t* select_id);
+int policy_check(uint32_t* select_id);
 #endif //CLASSSELECTION_STUDENT_MODE_H

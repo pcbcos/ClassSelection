@@ -100,7 +100,7 @@ void student_modify() {
             }
             char info[64]{};
             sprintf(info, "%s  \t(%s)", c.name, c.type ? "选修" : "必修");
-            newtCheckboxTreeAddItem(checkboxTree, info, (void *)(c.ID), flag, NEWT_ARG_APPEND, NEWT_ARG_LAST);
+            newtCheckboxTreeAddItem(checkboxTree, info, (void *) (c.ID), flag, NEWT_ARG_APPEND, NEWT_ARG_LAST);
             count++;
         }
     }
@@ -116,7 +116,7 @@ void student_modify() {
             }
             char info[64]{};
             sprintf(info, "%s  \t(%s)", c.name, c.type ? "选修" : "必修");
-            newtCheckboxTreeAddItem(checkboxTree, info, (void *)(c.ID), flag, NEWT_ARG_APPEND, NEWT_ARG_LAST);
+            newtCheckboxTreeAddItem(checkboxTree, info, (void *) (c.ID), flag, NEWT_ARG_APPEND, NEWT_ARG_LAST);
             count++;
         }
     }
@@ -133,7 +133,7 @@ void student_modify() {
         //sprintf(text, "%d", numselected);
         //show_info_win(text);
         for (int i = 0; i < numselected; i++) {
-            selected_id[i] = *((uint32_t*)ptr++);
+            selected_id[i] = *((uint32_t *) ptr++);
         }
         policy_check(selected_id);
 
@@ -218,16 +218,16 @@ void student_overlook() {
     }
 }
 
-void policy_check(uint32_t *select_id) {
+int policy_check(uint32_t *select_id) {
     //先检查必修课是不是都选上了
     uint32_t start_id = get_min_ID(class_list);
     uint32_t end_id = get_max_ID(class_list);//获取上下界，减少次数
+    float credits = 0.0f;
     for (uint32_t id = start_id; id <= end_id; id++) {
         if (get_itemRef_by_ID<class_t>(id).ID == 0) continue;
         if (get_itemRef_by_ID<class_t>(id).type == 0) {
             uint32_t *p;
             for (p = select_id; *p; p++) {
-
                 if (*p != id) {
                     continue;
                 } else {
@@ -236,7 +236,29 @@ void policy_check(uint32_t *select_id) {
             }
             if (!*p) {
                 show_warning_win("您有必修课未选!");
-                break;
+                return 1;
+            } else {
+                credits += get_itemRef_by_ID<class_t>(id).credits;
+            }
+        } else {
+            credits += get_itemRef_by_ID<class_t>(id).credits;
+        }
+    }
+    if (credits < 18) {
+        show_warning_win("学分没选够!");
+        return 1;
+    }
+    //时间冲突检查
+    for (uint32_t* p1=select_id;*p1;p1++){
+        pNode head1= get_itemRef_by_ID<class_t>(*p1).class_resource_link_head->next;
+        for(uint32_t* p2=p1+1;*p2;p2++){
+            pNode head2= get_itemRef_by_ID<class_t>(*p2).class_resource_link_head->next;
+            for(pNode r1=head1;r1;r1=r1->next){
+                for(pNode r2=head2;r2;r2=r2->next){
+                    if(resource_cmp(get_itemRef_by_ID<resource_t>(r1->targetID),get_itemRef_by_ID<resource_t>(r2->targetID))==0){
+                        show_warning_win("有时间冲突，自己查一下");
+                    }
+                }
             }
         }
     }

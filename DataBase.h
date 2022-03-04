@@ -31,7 +31,6 @@ typedef struct class_resource_t class_resource_t;
 typedef struct class_student_t class_student_t;
 typedef struct class_teacher_t class_teacher_t;
 
-
 extern class_t class_list[MAX_CLASS_NUM];
 extern student_t student_list[MAX_STUDENT_NUM];
 extern teacher_t teacher_list[MAX_TEACHER_NUM];
@@ -151,6 +150,7 @@ void save_class_data();
 void save_resource_data();
 
 void save_relation();
+int resource_cmp(const resource_t &r1, const resource_t &r2);
 
 uint32_t hashID(uint32_t ID, uint64_t max);
 
@@ -333,6 +333,7 @@ void del_entity(uint32_t id) {
     list_del_all(c.class_resource_link_head);
     list_del_all(c.class_teacher_link_head);
     memset(class_list + index, 0, sizeof(class_t));
+    class_num--;
 }
 
 template<typename T>
@@ -355,6 +356,11 @@ void del_entity(uint32_t id) {
     }
     list_del_all(get_T_head<T>(e));
     memset(&e,0,sizeof(T));
+    if constexpr(std::is_same_v<T,student_t>){
+        student_num--;
+    }else{
+        teacher_num--;
+    }
 }
 
 
