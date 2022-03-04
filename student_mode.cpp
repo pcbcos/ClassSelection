@@ -253,7 +253,6 @@ int policy_check(uint32_t *select_id) {
                     break;
                 }
             }
-            //credits += get_itemRef_by_ID<class_t>(id).credits;
         }
     }
     if (credits < 28) {
