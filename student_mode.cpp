@@ -203,7 +203,7 @@ void student_overlook() {
             const class_t &C = get_itemRef_by_ID<class_t>(result_id);
             pNode ct = C.class_teacher_link_head->next;
             pNode cr = C.class_resource_link_head->next;
-            char text2[256] = {0};
+            char text2[512] = {0};
             //渲染文本
             sprintf(text2, "课程名称:%s(%s)\n", C.name, C.type ? "选修" : "必修");
             sprintf(text2 + strlen(text2), "学分:%.1f\n", C.credits);
