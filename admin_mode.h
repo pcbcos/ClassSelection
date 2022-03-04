@@ -15,5 +15,5 @@ void admin_querry();
 
 void admin_modify();
 
-void admin_addclass();
+void admin_addentity();
 #endif //CLASSSELECTION_ADMIN_MODE_H

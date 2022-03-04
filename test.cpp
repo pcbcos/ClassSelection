@@ -127,7 +127,7 @@ void admin_querry() {
 
 void admin_modify() { ; }
 
-void admin_addclass() { ; }
+void admin_addentity() { ; }
 
 void admin_mode() {
     int p = 1, q = 2, r = 3, s = 4, a = 5, b = 6, *u;
@@ -161,7 +161,7 @@ void admin_mode() {
             admin_modify();
             break;
         case 4:
-            admin_addclass();
+            admin_addentity();
             break;
         case 5:
             return;

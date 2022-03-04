@@ -18,7 +18,7 @@ void admin_mode() {
         newtListboxAppendEntry(list, "浏览记录", &p); //1
         newtListboxAppendEntry(list, "查询记录", &q); //2
         newtListboxAppendEntry(list, "修改记录", &r);//3
-        newtListboxAppendEntry(list, "添加课程", &s);//4
+        newtListboxAppendEntry(list, "添加记录", &s);//4
         newtListboxAppendEntry(list, "退出", &a);
         newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
         form = newtForm(NULL, NULL, 0);
@@ -38,7 +38,7 @@ void admin_mode() {
                 admin_modify();
                 break;
             case 4:
-                admin_addclass();
+                admin_addentity();
                 break;
             case 5:
                 return;
@@ -687,4 +687,91 @@ void admin_modify() {
     newtFormDestroy(form);
 }
 
-void admin_addclass() { ; }
+void admin_addentity() {
+    start:
+    newtCls();
+    newtRefresh();
+    newtComponent form, list;
+    newtCenteredWindow(50, 10, "管理员模式-添加记录");
+    list = newtListbox(18, 3, 4, NEWT_FLAG_RETURNEXIT);
+    int p = 1, q = 2, r = 3, s = 4;
+    newtListboxAppendEntry(list, "添加学生", &p);
+    newtListboxAppendEntry(list, "添加课程", &q);
+    newtListboxAppendEntry(list, "添加教师", &r);
+    newtListboxAppendEntry(list, "返回", &s);
+    newtPushHelpLine(" Move using the arrow keys and press ENTER to select");
+    form = newtForm(NULL, NULL, 0);
+    newtFormAddComponent(form, list);
+    newtRunForm(form);
+    int *u = (int *) newtListboxGetCurrent(list);
+    if (*u == 1) {
+        char *entry_text[8];
+        int rc;
+        newtWinEntry entries[] = {
+                {"ID*",          entry_text + 0, 0},
+                {"姓名*",          entry_text + 1, 0},
+                {"性别*",          entry_text + 2, 0},
+                {"年龄*",          entry_text + 3, 0},
+                {"本学期前已获学分*",    entry_text + 4, 0},
+                {"已选课程ID(空格隔开)", entry_text + 5, 0},
+                {NULL, NULL,                     0}
+        };
+        memset(entry_text, 0, sizeof(entry_text));
+        rc = newtWinEntries("添加学生",
+                            "请输入学生信息", 64, 5, 5, 32, entries, "提交",
+                            "取消", NULL);
+        if (rc == 1) {
+            if (strlen(entry_text[0]) && strlen(entry_text[1]) && strlen(entry_text[2]) && strlen(entry_text[4])) {
+                student_t ss{};
+                ss.ID = atoi(entry_text[0]);
+                memcpy(ss.name, entry_text[1], strlen(entry_text[1]));
+                ss.sex = strcmp("男", entry_text[2]) ? true : false;
+                ss.age = atoi(entry_text[3]);
+                sscanf(entry_text[4], "%" SCNu8, &ss.credits);
+                ss.student_class_link_head = list_create(0);
+                uint32_t hID = ss.ID;
+                if (get_itemRef_by_ID<student_t>(ss.ID).ID) {
+                    show_warning_win("ID重复");
+                }
+                uint8_t hash_count = 0;
+                do {
+                    hID = hashID(hID, MAX_STUDENT_NUM);
+                    hash_count++;
+                } while (student_list[hID].ID != 0 && hash_count < MAX_HASH_TIME);
+                if (student_list[hID].ID == 0) {
+                    student_list[hID] = ss;
+                    student_num++;
+                    show_info_win("完成");
+                } else {
+                    char waring_text[64] = {0};
+                    sprintf(waring_text, "ID=%d hash冲突%d次,加入失败", ss.ID, MAX_HASH_TIME);
+                    show_warning_win(waring_text);
+                }
+                if (strlen(entry_text[5])) {
+                    char temp[128]{};
+                    strcpy(temp, entry_text[5]);
+                    char *token = strtok(temp, " ");
+                    while (token) {
+                        addRelation<student_t>(atoi(token), ss.ID, student_list);
+                        token = strtok(NULL, " ");
+                    }
+                }
+            } else {
+                show_warning_win("前5项为必填项");
+            }
+        } else {
+            show_info_win("用户取消操作");
+            newtFormDestroy(form);
+            newtCls();
+            goto start;
+        }
+    } else if (*u == 2) {
+
+    } else if (*u == 3) {
+
+    } else {
+        newtFormDestroy(form);
+        newtCls();
+        return;
+    }
+}
