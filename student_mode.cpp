@@ -100,7 +100,7 @@ void student_modify() {
             }
             char info[64]{};
             sprintf(info, "%s  \t(%s)", c.name, c.type ? "选修" : "必修");
-            newtCheckboxTreeAddItem(checkboxTree, info, (void *) &count, flag, NEWT_ARG_APPEND, NEWT_ARG_LAST);
+            newtCheckboxTreeAddItem(checkboxTree, info, (void *) &c.ID, flag, NEWT_ARG_APPEND, NEWT_ARG_LAST);
             count++;
         }
     }
@@ -116,7 +116,7 @@ void student_modify() {
             }
             char info[64]{};
             sprintf(info, "%s  \t(%s)", c.name, c.type ? "选修" : "必修");
-            newtCheckboxTreeAddItem(checkboxTree, info, (void *) &count, flag, NEWT_ARG_APPEND, NEWT_ARG_LAST);
+            newtCheckboxTreeAddItem(checkboxTree, info, (void *) &c.ID, flag, NEWT_ARG_APPEND, NEWT_ARG_LAST);
             count++;
         }
     }
@@ -124,14 +124,20 @@ void student_modify() {
     button2 = newtButton(35, 15, "取消");
 
     newtFormAddComponents(form, checkboxTree, button1, button2, NULL);
-
     answer = newtRunForm(form);
+    uint32_t selected_id[32] = {0};
     if (answer == button1) {
         result = newtCheckboxTreeGetSelection(checkboxTree, &numselected);
         ptr = result;
-        char text[32]{};
-        sprintf(text, "%d", numselected);
-        show_info_win(text);
+        //char text[32]{};
+        //sprintf(text, "%d", numselected);
+        //show_info_win(text);
+        for (int i = 0; i < numselected; i++) {
+            selected_id[i] = *(uint32_t *) ptr++;
+        }
+        policy_check(selected_id);
+
+
     } else {
         char text[32]{};
         show_info_win("您已取消");
@@ -209,6 +215,27 @@ void student_overlook() {
             show_info_win(text2);
         }
         newtFormDestroy(form2);
+    }
+}
+
+void policy_check(uint32_t *select_id) {
+    //先检查必修课是不是都选上了
+    uint32_t start_id = get_min_ID(class_list);
+    uint32_t end_id = get_max_ID(class_list);//获取上下界，减少次数
+    for (uint32_t id = start_id; id <= end_id; id++) {
+        if (get_itemRef_by_ID<class_t>(id).type == 0) {
+            uint32_t *p;
+            for (p = select_id; *p; p++) {
+                if (*p != id) {
+                    continue;
+                } else {
+                    break;
+                }
+            }
+            if (!*p) {
+                show_warning_win("您有必修课未选!");
+            }
+        }
     }
 }
 
